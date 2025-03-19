@@ -5,7 +5,7 @@ import { users } from "./users.js"; // Ensure you include `.js` for ESM
 const prisma = new PrismaClient();
 
 async function seedDatabase() {
-    console.log("🚀 Seeding database...");
+    console.log(" Seeding database...");
 
     for (const user of users) {
         try {
@@ -38,13 +38,13 @@ async function seedDatabase() {
                     } 
                 }
             });
-            console.log(`✅ Added user: ${user.name}`);
+            console.log(` Added user: ${user.name}`);
         } catch (error) {
-            console.error(`❌ Error adding user ${user.name}:`, error);
+            console.error(` Error adding user ${user.name}:`, error);
         }
     }
 
-    console.log("🎉 Seeding complete!");
+    console.log(" Seeding complete!");
     await prisma.$disconnect();
 }
 
