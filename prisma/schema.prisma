@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,67 @@ generator client {
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  email             String       @unique
+  password          String
+  imageUrl          String?
+  bio               String?
+  role              String?      @default("User")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  preferences      Preferences?
+  matchesSent      Match[]      @relation("UserMatchSender")
+  matchesReceived  Match[]      @relation("UserMatchReceiver")
+  messagesSent     Message[]    @relation("SentMessages")
+  messagesReceived Message[]    @relation("ReceivedMessages")
+}
+
+model Preferences {
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @unique @db.ObjectId
+  ethnicity         String?
+  religion          String?
+  minAge            Int
+  maxAge            Int
+  sex               String
+  genderPreference  String
+  occupation        String
+  preferredLocation String
+  hasPets           Boolean @default(false)
+  petType           String?
+  minBudget         Int
+  maxBudget         Int
+  accommodationType String
+  sleepPattern      String
+  drinking          Boolean @default(false)
+  smoking           Boolean @default(false)
+  cooking           String
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Match {
+  id        String   @id @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  matchId   String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  sender   User @relation(name: "UserMatchSender", fields: [userId], references: [id])
+  receiver User @relation(name: "UserMatchReceiver", fields: [matchId], references: [id])
+}
+
+model Message {
+  id         String   @id @map("_id") @db.ObjectId
+  senderId   String   @db.ObjectId
+  receiverId String   @db.ObjectId
+  message    String
+  timestamp  DateTime @default(now())
+
+  sender   User @relation(name: "SentMessages", fields: [senderId], references: [id])
+  receiver User @relation(name: "ReceivedMessages", fields: [receiverId], references: [id])
 }
