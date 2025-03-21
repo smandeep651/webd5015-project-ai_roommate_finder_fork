@@ -24,6 +24,19 @@ const nextConfig = {
         port: ""
       }
     ]
+  },
+  webpack(config, { isServer }) {
+    // Make sure that flatpickr CSS is handled properly
+    config.module.rules.push({
+      test: /\.css$/,
+      use: [
+        'style-loader', // or 'next-style-loader'
+        'css-loader',
+        'postcss-loader'
+      ]
+    });
+
+    return config;
   }
 };
 
