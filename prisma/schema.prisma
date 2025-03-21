@@ -8,11 +8,15 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  email      String   @unique
-  password   String
-  createdAt  DateTime @default(now())
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  email             String       @unique
+  password          String
+  imageUrl          String?
+  bio               String?
+  role              String?      @default("User")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   preferences      Preferences?
   matchesSent      Match[]      @relation("UserMatchSender")
