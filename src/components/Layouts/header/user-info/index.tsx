@@ -11,8 +11,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { LogOutIcon, SettingsIcon, UserIcon } from "./icons";
+import { useSession } from "next-auth/react";
+import { logout } from "../../../../../actions/auth";
 
 export function UserInfo() {
+
+  const { data: session, status } = useSession()
+
   const [isOpen, setIsOpen] = useState(false);
 
   const USER = {
@@ -22,21 +27,29 @@ export function UserInfo() {
   };
 
   return (
+    <>
+    {!session?.user ? (
+      <Link href={"/auth/sign-in"}>
+        <div className="bg-indigo-600 text-white text-sm px-4 rounded-md">
+          Sign In
+        </div>
+      </Link>
+    ) : (
     <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
       <DropdownTrigger className="rounded align-middle outline-none ring-primary ring-offset-2 focus-visible:ring-1 dark:ring-offset-gray-dark">
         <span className="sr-only">My Account</span>
 
         <figure className="flex items-center gap-3">
-          <Image
-            src={USER.img}
+          {session.user.image && <Image
+            src={session.user.image}
             className="size-12"
-            alt={`Avatar of ${USER.name}`}
+            alt={`Avatar of ${session.user.image}`}
             role="presentation"
             width={200}
             height={200}
-          />
+          />}
           <figcaption className="flex items-center gap-1 font-medium text-dark dark:text-dark-6 max-[1024px]:sr-only">
-            <span>{USER.name}</span>
+            <span>{session.user.name}</span>
 
             <ChevronUpIcon
               aria-hidden
@@ -57,21 +70,21 @@ export function UserInfo() {
         <h2 className="sr-only">User information</h2>
 
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
-          <Image
-            src={USER.img}
+          {session.user.image && <Image
+            src={session.user.image}
             className="size-12"
-            alt={`Avatar for ${USER.name}`}
+            alt={`Avatar for ${session.user.name}`}
             role="presentation"
             width={200}
             height={200}
-          />
+          />}
 
           <figcaption className="space-y-1 text-base font-medium">
             <div className="mb-2 leading-none text-dark dark:text-white">
-              {USER.name}
+              {session.user.name}
             </div>
 
-            <div className="leading-none text-gray-6">{USER.email}</div>
+            <div className="leading-none text-gray-6">{session.user.email}</div>
           </figcaption>
         </figure>
 
@@ -106,7 +119,7 @@ export function UserInfo() {
         <div className="p-2 text-base text-[#4B5563] dark:text-dark-6">
           <button
             className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-[9px] hover:bg-gray-2 hover:text-dark dark:hover:bg-dark-3 dark:hover:text-white"
-            onClick={() => setIsOpen(false)}
+            onClick={() => logout()}
           >
             <LogOutIcon />
 
@@ -115,5 +128,7 @@ export function UserInfo() {
         </div>
       </DropdownContent>
     </Dropdown>
+  )}
+  </>
   );
 }

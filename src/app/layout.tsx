@@ -10,7 +10,9 @@ import { Header } from "@/components/Layouts/header";
 import type { Metadata } from "next";
 import NextTopLoader from "nextjs-toploader";
 import type { PropsWithChildren } from "react";
+import { SessionProvider, useSession } from "next-auth/react";
 import { Providers } from "./providers";
+import { auth } from "../../auth";
 
 export const metadata: Metadata = {
   title: {
@@ -21,8 +23,12 @@ export const metadata: Metadata = {
     "Next.js admin dashboard toolkit with 200+ templates, UI components, and integrations for fast dashboard development.",
 };
 
-export default function RootLayout({ children }: PropsWithChildren) {
+export default async function RootLayout({ children }: PropsWithChildren) {
+  
+  const session = await auth()
+
   return (
+    <SessionProvider session={session}>
     <html lang="en" suppressHydrationWarning>
       <body>
         <Providers>
@@ -42,5 +48,6 @@ export default function RootLayout({ children }: PropsWithChildren) {
         </Providers>
       </body>
     </html>
+    </SessionProvider>
   );
 }
