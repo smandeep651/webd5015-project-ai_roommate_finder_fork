@@ -11,7 +11,7 @@ model User {
   id                String       @id @default(auto()) @map("_id") @db.ObjectId
   name              String
   email             String       @unique
-  password          String?
+  password          String       @unique
   imageUrl          String?
   bio               String?
   role              String?      @default("User")
