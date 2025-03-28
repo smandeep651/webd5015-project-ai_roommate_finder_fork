@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
-import { findMatches } from "@/lib/aiMatcher"; // ✅ updated import path
+import { findMatches } from "@/lib/aiMatcher";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { userId: string } }
-) {
-  const userId = params.userId;
+export async function GET(req: Request) {
+  // Extract userId from URL
+  const segments = req.url.split("/");
+  const userId = segments[segments.length - 1];
+
+  if (!userId) {
+    return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+  }
 
   try {
     const result = await findMatches(userId);

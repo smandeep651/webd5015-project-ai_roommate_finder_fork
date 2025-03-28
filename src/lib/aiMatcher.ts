@@ -7,6 +7,23 @@ dotenv.config({ path: "./.env" });
 const prisma = new PrismaClient();
 const together = new Together({ apiKey: process.env.TOGETHER_API_KEY });
 
+function normalizePreferences(pref: any) {
+  return {
+    location: pref.preferredLocation,
+    budgetMin: pref.minBudget,
+    budgetMax: pref.maxBudget,
+    ageMin: pref.minAge,
+    ageMax: pref.maxAge,
+    occupation: pref.occupation,
+    smoking: pref.smoking,
+    drinking: pref.drinking,
+    cooking: pref.cooking,
+    genderPreference: pref.genderPreference,
+    religion: pref.religion,
+    ethnicity: pref.ethnicity
+  };
+}
+
 export async function findMatches(userId: string) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -22,42 +39,39 @@ export async function findMatches(userId: string) {
     include: { preferences: true },
   });
 
-  // Strict match
-  let matches = otherUsers.filter((u) => {
-    const pref = u.preferences;
-    const myPref = user.preferences;
+  const myPref = normalizePreferences(user.preferences);
 
-    return (
-      pref.location === myPref.location &&
-      pref.budgetMin <= myPref.budgetMax &&
-      pref.budgetMax >= myPref.budgetMin &&
-      pref.occupation === myPref.occupation &&
-      pref.smoking === myPref.smoking &&
-      (myPref.genderPreference === "No Preference" || u.sex === myPref.genderPreference) &&
-      (!myPref.religion || u.religion === myPref.religion) &&
-      (!myPref.ethnicity || u.ethnicity === myPref.ethnicity) &&
-      pref.ageMin <= myPref.ageMax &&
-      pref.ageMax >= myPref.ageMin &&
-      (pref.cooking === myPref.cooking || myPref.cooking === "Flexible")
-    );
+  const matches = otherUsers.filter((u) => {
+    if (!u.preferences) return false;
+    const pref = normalizePreferences(u.preferences);
+
+    let score = 0;
+
+    if (pref.location === myPref.location) score++;
+    if (pref.budgetMin <= myPref.budgetMax && pref.budgetMax >= myPref.budgetMin) score++;
+    if (pref.occupation === myPref.occupation) score++;
+    if (pref.smoking === myPref.smoking) score++;
+    if (myPref.genderPreference === "No Preference" || u.sex === myPref.genderPreference) score++;
+    if (!myPref.religion || !u.religion || u.religion === myPref.religion) score++;
+    if (!myPref.ethnicity || !u.ethnicity || u.ethnicity === myPref.ethnicity) score++;
+    if (pref.ageMin <= myPref.ageMax && pref.ageMax >= myPref.ageMin) score++;
+    if (pref.drinking === myPref.drinking) score++;
+    if (
+      pref.cooking === myPref.cooking ||
+      myPref.cooking === "Flexible" ||
+      pref.cooking === "Flexible"
+    )
+      score++;
+
+    const isMatch = score >= 8;
+
+    console.log(`${isMatch ? "yes" : "no"} ${u.name} — score: ${score}/10`);
+
+    return isMatch;
   });
 
-  // Relaxed match
-  if (matches.length === 0) {
-    matches = otherUsers.filter((u) => {
-      const pref = u.preferences;
-      const myPref = user.preferences;
-
-      return (
-        pref.location === myPref.location &&
-        pref.budgetMin <= myPref.budgetMax + 200 &&
-        pref.budgetMax >= myPref.budgetMin - 200
-      );
-    }).slice(0, 5);
-  }
-
   const matchNames = matches.map((m) => m.name).join(", ");
-  const aiDescription = await getAiMatchDescription(user.preferences, matchNames);
+  const aiDescription = await getAiMatchDescription(myPref, matchNames);
 
   return { matches, aiDescription };
 }
