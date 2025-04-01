@@ -14,6 +14,8 @@
     "@auth/prisma-adapter": "^2.8.0",
     "@prisma/client": "^6.5.0",
     "apexcharts": "^4.5.0",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "css-loader": "^7.1.2",
@@ -31,13 +33,14 @@
     "react-quill": "^2.0.0",
     "react-select": "^5.10.0",
     "react-table": "^7.8.0",
-    "together-ai": "^0.13.0",
     "style-loader": "^4.0.0",
     "tailwind-merge": "^2.6.0",
+    "together-ai": "^0.13.0",
     "uuid": "^11.1.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^22",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
@@ -59,7 +62,11 @@
       "@prisma/engines",
       "esbuild",
       "prisma",
+      "bcrypt",
       "sharp"
     ]
-  }
+  },
+  "prisma": {
+  "seed": "node --loader ts-node/esm prisma\\seed.ts"
+}
 }

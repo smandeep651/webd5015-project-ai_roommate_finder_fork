@@ -9,10 +9,11 @@ import {
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { LogOutIcon, SettingsIcon, UserIcon } from "./icons";
 import { useSession } from "next-auth/react";
-import { logout } from "../../../../../actions/auth";
+import { logout } from "../../../../lib/actions";
 
 export function UserInfo() {
 
@@ -20,15 +21,20 @@ export function UserInfo() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const USER = {
-    name: "John Smith",
-    email: "johnson@nextadmin.com",
-    img: "/images/user/user-03.png",
-  };
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await logout()
+    router.push('/auth/sign-in')
+  }
+
+  // useEffect(() => {
+  //   handleLogout()
+  // }, [router])
 
   return (
     <>
-    {!session?.user ? (
+    {status !== "authenticated" ? (
       <Link href={"/auth/sign-in"}>
         <div className="bg-indigo-600 text-white text-sm px-4 rounded-md">
           Sign In
@@ -40,7 +46,7 @@ export function UserInfo() {
         <span className="sr-only">My Account</span>
 
         <figure className="flex items-center gap-3">
-          {session.user.image && <Image
+          {session?.user?.image && <Image
             src={session.user.image}
             className="size-12"
             alt={`Avatar of ${session.user.image}`}
@@ -49,7 +55,7 @@ export function UserInfo() {
             height={200}
           />}
           <figcaption className="flex items-center gap-1 font-medium text-dark dark:text-dark-6 max-[1024px]:sr-only">
-            <span>{session.user.name}</span>
+            <span>{session?.user?.name}</span>
 
             <ChevronUpIcon
               aria-hidden
@@ -70,7 +76,7 @@ export function UserInfo() {
         <h2 className="sr-only">User information</h2>
 
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
-          {session.user.image && <Image
+          {session?.user?.image && <Image
             src={session.user.image}
             className="size-12"
             alt={`Avatar for ${session.user.name}`}
@@ -81,10 +87,10 @@ export function UserInfo() {
 
           <figcaption className="space-y-1 text-base font-medium">
             <div className="mb-2 leading-none text-dark dark:text-white">
-              {session.user.name}
+              {session?.user?.name}
             </div>
 
-            <div className="leading-none text-gray-6">{session.user.email}</div>
+            <div className="leading-none text-gray-6">{session?.user?.email}</div>
           </figcaption>
         </figure>
 
@@ -119,7 +125,7 @@ export function UserInfo() {
         <div className="p-2 text-base text-[#4B5563] dark:text-dark-6">
           <button
             className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-[9px] hover:bg-gray-2 hover:text-dark dark:hover:bg-dark-3 dark:hover:text-white"
-            onClick={() => logout()}
+            onClick={ handleLogout }
           >
             <LogOutIcon />
 
