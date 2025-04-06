@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { users } from "./users.js"; // Ensure you include `.js` for ESM
-
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
@@ -9,11 +9,13 @@ async function seedDatabase() {
 
     for (const user of users) {
         try {
+            const hashedPassword = await bcrypt.hash(user.password, 10);
+
             await prisma.user.create({
                 data: {
                     name: user.name, // Remove `id`
                     email: user.email,
-                    password: user.password,
+                    password: hashedPassword,
                     createdAt: new Date(user.createdAt),
                     preferences: {
                         create: {

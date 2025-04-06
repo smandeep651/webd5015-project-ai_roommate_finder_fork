@@ -1,7 +1,7 @@
 "use client"
 
 import { GoogleIcon } from "@/assets/icons";
-import { login } from "../../../actions/auth";
+import { login } from "../../../lib/actions";
 
 export default function GoogleSigninButton({ text }: { text: string }) {
   return (
