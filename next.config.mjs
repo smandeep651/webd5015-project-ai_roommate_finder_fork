@@ -22,15 +22,19 @@ const nextConfig = {
         protocol: "https",
         hostname: "pub-b7fd9c30cdbf439183b75041f5f71b92.r2.dev",
         port: ""
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com", // ✅ Add this
+        port: ""
       }
     ]
   },
   webpack(config, { isServer }) {
-    // Make sure that flatpickr CSS is handled properly
     config.module.rules.push({
       test: /\.css$/,
       use: [
-        'style-loader', // or 'next-style-loader'
+        'style-loader',
         'css-loader',
         'postcss-loader'
       ]

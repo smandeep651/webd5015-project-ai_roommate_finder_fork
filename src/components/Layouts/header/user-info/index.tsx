@@ -10,38 +10,29 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { LogOutIcon, SettingsIcon, UserIcon } from "./icons";
-import { useSession } from "next-auth/react";
-import { logout } from "../../../../lib/actions";
+import { signOut, useSession } from "next-auth/react";
+// import { logout } from "../../../../../actions/auth";
 
 export function UserInfo() {
 
-  const { data: session, status } = useSession()
+  const { data: session, status, update } = useSession()
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const router = useRouter()
-
-  const handleLogout = async () => {
-    await logout()
-    router.push('/auth/sign-in')
+  const handleLogout = async() => {
+    await signOut({ redirect: true, callbackUrl: '/auth/sign-in' }).then(() => {
+      window.location.href = 'auth/sign-in'
+    })
   }
 
-  // useEffect(() => {
-  //   handleLogout()
-  // }, [router])
+  useEffect(() => {
+    if(!session) update()
+  }, [session?.user])
 
   return (
     <>
-    {status !== "authenticated" ? (
-      <Link href={"/auth/sign-in"}>
-        <div className="bg-indigo-600 text-white text-sm px-4 rounded-md">
-          Sign In
-        </div>
-      </Link>
-    ) : (
-    <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
+    {session?.user && <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
       <DropdownTrigger className="rounded align-middle outline-none ring-primary ring-offset-2 focus-visible:ring-1 dark:ring-offset-gray-dark">
         <span className="sr-only">My Account</span>
 
@@ -125,7 +116,7 @@ export function UserInfo() {
         <div className="p-2 text-base text-[#4B5563] dark:text-dark-6">
           <button
             className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-[9px] hover:bg-gray-2 hover:text-dark dark:hover:bg-dark-3 dark:hover:text-white"
-            onClick={ handleLogout }
+            onClick={() => handleLogout()}
           >
             <LogOutIcon />
 
@@ -134,7 +125,7 @@ export function UserInfo() {
         </div>
       </DropdownContent>
     </Dropdown>
-  )}
+  }
   </>
   );
 }

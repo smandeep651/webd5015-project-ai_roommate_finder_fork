@@ -2,8 +2,8 @@
 import { EmailIcon, PasswordIcon } from "@/assets/icons";
 import Link from "next/link";
 import React, { useState } from "react";
-import InputGroup from "../FormElements/InputGroup";
-import { Checkbox } from "../FormElements/checkbox";
+import InputGroup from "../../../components/FormElements/InputGroup";
+import { Checkbox } from "../../../components/FormElements/checkbox";
 import { useActionState } from 'react';
 import { authenticate } from '@/lib/actions';
 import { useSearchParams } from 'next/navigation';

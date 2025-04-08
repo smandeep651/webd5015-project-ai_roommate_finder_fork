@@ -1,25 +1,3 @@
-// import NextAuth from "next-auth";
-// import { PrismaAdapter } from "@auth/prisma-adapter";
-// import { prisma } from "./prisma";
-// import GoogleProvider from "next-auth/providers/google";
-// import FacebookProvider from "next-auth/providers/facebook";
- 
-// export const { handlers, auth, signIn, signOut } = NextAuth({
-//   debug: true,
-//   adapter: PrismaAdapter(prisma),
-//   session: { strategy: "jwt" },
-//   providers: [
-//     GoogleProvider({
-//         clientId: process.env.GOOGLE_CLIENT_ID,
-//         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//     }),
-//     FacebookProvider({
-//     clientId: process.env.FACEBOOK_CLIENT_ID,
-//     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-//     }),
-//   ],
-//   secret: process.env.NEXTAUTH_SECRET,
-// })
 
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -89,12 +67,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session }) {
-      if (session.user) {
-        const dbUser = await getUser(session.user.email);
-        if (dbUser) session.user.id = dbUser.id; // Add user ID to session
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
       }
+      return token;
+    },
+  
+    async session({ session, token }) {
+      if (session.user && token?.id) {
+        session.user.id = token.id as string;
+  
+        // Fetch the full user from the DB
+        const dbUser = await getUser(session.user.email!);
+  
+        if (dbUser) {
+          // ✅ Override the default Google image if you have a custom one
+          session.user.image = dbUser.image || session.user.image;
+        }
+      }
+  
       return session;
     },
   },
+  
+  
 });

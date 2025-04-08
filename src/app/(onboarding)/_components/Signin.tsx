@@ -1,6 +1,6 @@
 import Link from "next/link";
-import GoogleSigninButton from "../GoogleSigninButton";
-import SigninWithPassword from "../SigninWithPassword";
+import GoogleSigninButton from "./GoogleSigninButton";
+import SigninWithPassword from "./SigninWithPassword";
 import { Suspense } from "react";
 
 export default function Signin() {

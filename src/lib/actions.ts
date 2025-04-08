@@ -4,6 +4,11 @@ import { AuthError } from 'next-auth';
 import { signIn, signOut } from "../../auth"
 import { revalidatePath } from "next/cache"
 import { cookies } from 'next/headers'
+import { auth as nextAuth } from '../../auth'
+
+
+
+export const auth = nextAuth;
 
 export async function login(provider: string) {
     await signIn(provider, { redirectTo: '/' })
