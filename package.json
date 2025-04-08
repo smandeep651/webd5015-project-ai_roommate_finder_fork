@@ -64,10 +64,14 @@
       "bcrypt",
       "esbuild",
       "prisma",
+      "bcrypt",
       "sharp"
     ],
     "ignoredBuiltDependencies": [
       "bcrypt"
     ]
-  }
+  },
+  "prisma": {
+  "seed": "node --loader ts-node/esm prisma\\seed.ts"
+}
 }
