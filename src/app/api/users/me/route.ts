@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "../../../../../actions/auth"; 
+import { auth } from "@/lib/actions"; 
 import { db } from "@/lib/db"; 
 
 export async function PUT(req: Request) {
@@ -12,12 +12,74 @@ export async function PUT(req: Request) {
 
     const body = await req.json();
 
-    // Update user based on session email
+    const {
+      profileImageUrl,
+      name,
+      bio,
+      age,
+      sex,
+      occupation,
+      preferredLocation,
+      ethnicity,
+      religion,
+      ageRange,
+      genderPreference,
+      accommodationType,
+      budget,
+      pets,
+      habits,
+      cooking,
+    } = body;
+
     const updatedUser = await db.user.update({
       where: { email: session.user.email },
       data: {
-        ...body,
+        image: profileImageUrl,
+        name,
+        bio,
         profileComplete: true,
+        preferences: {
+          upsert: {
+            create: {
+              preferredLocation,
+              ethnicity,
+              religion,
+              minAge: ageRange.min,
+              maxAge: ageRange.max,
+              sex,
+              genderPreference,
+              occupation,
+              hasPets: pets.hasPets,
+              petType: pets.type,
+              minBudget: budget.min,
+              maxBudget: budget.max,
+              accommodationType,
+              sleepPattern: habits.sleepPattern,
+              drinking: habits.drinking,
+              smoking: habits.smoking,
+              cooking,
+            },
+            update: {
+              preferredLocation,
+              ethnicity,
+              religion,
+              minAge: ageRange.min,
+              maxAge: ageRange.max,
+              sex,
+              genderPreference,
+              occupation,
+              hasPets: pets.hasPets,
+              petType: pets.type,
+              minBudget: budget.min,
+              maxBudget: budget.max,
+              accommodationType,
+              sleepPattern: habits.sleepPattern,
+              drinking: habits.drinking,
+              smoking: habits.smoking,
+              cooking,
+            },
+          },
+        },
       },
     });
 

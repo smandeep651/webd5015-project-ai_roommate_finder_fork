@@ -4,18 +4,15 @@ import { AuthError } from 'next-auth';
 import { signIn, signOut } from "../../auth"
 import { revalidatePath } from "next/cache"
 import { cookies } from 'next/headers'
-import getServerSession from "next-auth"; 
-import { authConfig } from "../../auth.config";
+import { auth as nextAuth } from '../../auth'
 
 
 
-export async function auth(): Promise<Session | null> {
-  return await getServerSession(authConfig);
-}
+export const auth = nextAuth;
 
 export async function login(provider: string) {
-    await signIn(provider, { redirectTo: '/home' })
-    revalidatePath('/home')
+    await signIn(provider, { redirectTo: '/' })
+    revalidatePath('/')
 }
 
 export async function logout() {

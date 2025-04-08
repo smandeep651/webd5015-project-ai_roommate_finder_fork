@@ -68,12 +68,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session }) {
-      if (session.user) {
-        const dbUser = await getUser(session.user.email);
-        if (dbUser) session.user.id = dbUser.id; // Add user ID to session
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
       }
+      return token;
+    },
+  
+    async session({ session, token }) {
+      if (session.user && token?.id) {
+        session.user.id = token.id as string;
+  
+        // Fetch the full user from the DB
+        const dbUser = await getUser(session.user.email!);
+  
+        if (dbUser) {
+          // ✅ Override the default Google image if you have a custom one
+          session.user.image = dbUser.image || session.user.image;
+        }
+      }
+  
       return session;
     },
   },
+  
+  
 });
