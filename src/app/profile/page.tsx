@@ -12,7 +12,7 @@ export default function Page() {
     name: "Danish Heilium",
     profilePhoto: "/images/user/user-03.png",
     coverPhoto: "/images/cover/cover-01.png",
-  });
+  }); 
 
   const handleChange = (e: any) => {
     if (e.target.name === "profilePhoto" ) {

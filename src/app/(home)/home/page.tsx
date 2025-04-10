@@ -1,6 +1,8 @@
 import { auth } from "@/lib/actions";
 import { findMatches } from "@/lib/aiMatcher";
 import Image from "next/image";
+import { Button } from "@/components/ui-elements/button";
+import { LikeIcon, MessageOutlineIcon, RemoveIcon } from "@/assets/icons";
 
 export default async function HomePage() {
   const session = await auth();
@@ -13,44 +15,76 @@ export default async function HomePage() {
 
   return (
     <main className="p-6">
-      <h1 className="text-3xl font-bold mb-4">Possible Matches</h1>
-      <p className="text-gray-700 mb-8">{aiDescription}</p>
+      <h1 className="text-3xl font-bold mb-2 text-dark dark:text-white">Possible Matches</h1>
+      <p className="text-gray-700 dark:text-gray-300 mb-6">{aiDescription}</p>
 
       {matches.length === 0 ? (
-        <p className="text-gray-500">No matches found at the moment. Please check back later.</p>
+        <p className="text-gray-500 dark:text-gray-400">
+          No matches found at the moment. Please check back later.
+        </p>
       ) : (
         <div className="flex flex-col gap-6">
           {matches.map((match) => (
             <div
               key={match.id}
-              className="w-full bg-white rounded-xl shadow-md border p-6 hover:shadow-lg transition-all"
+              className="bg-white dark:bg-gray-dark dark:shadow-card text-white rounded-2xl shadow-lg flex gap-4 mb-5"
             >
-              <div className="flex items-center gap-6 mb-4">
+              {/* Profile Image */}
+              <div className="flex-shrink-0">
                 <Image
                   src={match.image || match.imageUrl || "/images/user/default.png"}
                   alt={match.name}
-                  width={80}
-                  height={80}
-                  className="rounded-full object-cover"
+                  width={170}
+                  height={150}
+                  className="rounded-s-xl object-cover bg-gray-2 h-full border-r-4 border-primary"
                 />
-                <div>
-                  <h2 className="font-semibold text-xl">{match.name}</h2>
-                  <p className="text-sm text-gray-500">{match.preferences?.occupation}</p>
-                  <p className="text-sm text-gray-600 italic">{match.bio}</p>
-                </div>
               </div>
 
-              <div className="text-sm text-gray-700 space-y-1 pl-1">
-                <p><strong>Preferred Location:</strong> {match.preferences?.preferredLocation}</p>
-                <p><strong>Age Range:</strong> {match.preferences?.minAge} - {match.preferences?.maxAge}</p>
-                <p><strong>Budget:</strong> ${match.preferences?.minBudget} - ${match.preferences?.maxBudget}</p>
-                <p><strong>Accommodation Type:</strong> {match.preferences?.accommodationType}</p>
-                <p><strong>Habits:</strong> {match.preferences?.sleepPattern} | Drinking: {match.preferences?.drinking ? 'Yes' : 'No'} | Smoking: {match.preferences?.smoking ? 'Yes' : 'No'}</p>
-                <p><strong>Cooking:</strong> {match.preferences?.cooking}</p>
-                <p><strong>Pets:</strong> {match.preferences?.hasPets ? `Yes (${match.preferences?.petType || 'N/A'})` : 'No'}</p>
-                <p><strong>Gender Preference:</strong> {match.preferences?.genderPreference}</p>
-                <p><strong>Ethnicity:</strong> {match.preferences?.ethnicity}</p>
-                <p><strong>Religion:</strong> {match.preferences?.religion}</p>
+              {/* Roommate Details */}
+              <div className="flex-1 p-6">
+                <h2 className="text-[22px] text-black dark:text-white font-semibold pb-1">{match.name}</h2>
+                <p className="text-gray-400 text-sm flex flex-wrap gap-2">
+                  {match.preferences?.country && <span>From {match.preferences.country} •</span>}
+                  {match.preferences?.age && <span>{match.preferences.age} years •</span>}
+                  {match.preferences?.genderPreference && <span>{match.preferences.genderPreference} •</span>}
+                  {match.preferences?.occupation && <span>{match.preferences.occupation} •</span>}
+                  {match.preferences?.maxBudget && <span>Max Budget: ${match.preferences.maxBudget}</span>}
+                </p>
+
+                {/* Bio */}
+                {match.bio && (
+                  <p className="mt-2 text-gray-300 text-base leading-relaxed">
+                    {match.bio}{" "}
+                    <span className="text-blue-400 cursor-pointer">more</span>
+                  </p>
+                )}
+
+                {/* Location */}
+                {match.preferences?.preferredLocation && (
+                  <p className="mt-2 text-gray-400 text-sm pb-3">
+                    <span className="font-semibold">Roommate Looking:</span>{" "}
+                    {match.preferences.preferredLocation}
+                  </p>
+                )}
+
+                {/* Actions */}
+                <div className="flex flex-wrap gap-5 xl:gap-2">
+                  <Button
+                    label="Chat"
+                    variant="outlinePrimary"
+                    shape="rounded"
+                    size="small"
+                    icon={<MessageOutlineIcon />}
+                  />
+                  <Button
+                    label="Remove"
+                    variant="outlinePrimary"
+                    shape="rounded"
+                    size="small"
+                    className="border-red-400 text-red-400 dark:text-red-400"
+                    icon={<RemoveIcon />}
+                  />
+                </div>
               </div>
             </div>
           ))}

@@ -220,6 +220,24 @@ export function TrashIcon(props: IconProps) {
   );
 }
 
+export function LikeIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      {...props}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+      />
+    </svg>
+  );
+}
+
 export function MessageOutlineIcon(props: IconProps) {
   return (
     <svg
@@ -238,6 +256,29 @@ export function MessageOutlineIcon(props: IconProps) {
     </svg>
   );
 }
+
+export function RemoveIcon(props: IconProps) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M9 3C8.44772 3 8 3.44772 8 4V5H5C4.44772 5 4 5.44772 4 6C4 6.55228 4.44772 7 5 7H19C19.5523 7 20 6.55228 20 6C20 5.44772 19.5523 5 19 5H16V4C16 3.44772 15.5523 3 15 3H9ZM10 5H14V4H10V5Z"
+      />
+      <path
+        d="M6 8H18L17.1942 19.2058C17.1084 20.3883 16.1191 21.25 14.9331 21.25H9.06688C7.88089 21.25 6.89161 20.3883 6.80584 19.2058L6 8Z"
+      />
+    </svg>
+  );
+}
+
 
 export function EmailIcon(props: IconProps) {
   return (

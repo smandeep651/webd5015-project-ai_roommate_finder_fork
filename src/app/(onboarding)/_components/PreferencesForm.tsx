@@ -106,12 +106,12 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <h2 className="text-2xl font-bold text-center">Your Preferences ✨</h2>
+      <h2 className="text-2xl font-bold text-center text-black dark:text-white">Your Preferences ✨</h2>
 
       {/* Preferred Location */}
       <div className="space-y-2">
-        <label>Preferred Location</label>
-        <select name="preferredLocation" value={form.preferredLocation} onChange={handleChange} className="w-full p-2 border rounded">
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Preferred Location</label>
+        <select name="preferredLocation" value={form.preferredLocation} onChange={handleChange} className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary">
           <option value="">Select...</option>
           <option value="Downtown">Downtown</option>
           <option value="Uptown">Uptown</option>
@@ -122,8 +122,8 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
 
       {/* Ethnicity */}
       <div className="space-y-2">
-        <label>Ethnicity</label>
-        <select name="ethnicity" value={form.ethnicity} onChange={handleChange} className="w-full p-2 border rounded">
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Ethnicity</label>
+        <select name="ethnicity" value={form.ethnicity} onChange={handleChange} className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary">
           <option value="">Select...</option>
           <option value="Asian">Asian</option>
           <option value="Black">Black</option>
@@ -136,8 +136,8 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
 
       {/* Religion */}
       <div className="space-y-2">
-        <label>Religion</label>
-        <select name="religion" value={form.religion} onChange={handleChange} className="w-full p-2 border rounded">
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Religion</label>
+        <select name="religion" value={form.religion} onChange={handleChange} className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary">
           <option value="">Select...</option>
           <option value="Christian">Christian</option>
           <option value="Muslim">Muslim</option>
@@ -152,24 +152,24 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
       {/* Age Range */}
       <div className="flex gap-4">
         <div className="flex-1 space-y-2">
-          <label>Age Min</label>
+          <label className="block font-medium text-body-sm text-dark dark:text-white">Age Min</label>
           <input
             type="number"
             name="ageRange.min"
             value={form.ageRange.min}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary"
           />
           {getError('ageRange.min')}
         </div>
         <div className="flex-1 space-y-2">
-          <label>Age Max</label>
+          <label className="block font-medium text-body-sm text-dark dark:text-white">Age Max</label>
           <input
             type="number"
             name="ageRange.max"
             value={form.ageRange.max}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary"
           />
           {getError('ageRange.max')}
         </div>
@@ -177,8 +177,8 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
 
       {/* Gender Preference */}
       <div className="space-y-2">
-        <label>Gender Preference</label>
-        <select name="genderPreference" value={form.genderPreference} onChange={handleChange} className="w-full p-2 border rounded">
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Gender Preference</label>
+        <select name="genderPreference" value={form.genderPreference} onChange={handleChange} className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary">
           <option value="">Select...</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
@@ -189,8 +189,8 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
 
       {/* Accommodation Type */}
       <div className="space-y-2">
-        <label>Accommodation Type</label>
-        <select name="accommodationType" value={form.accommodationType} onChange={handleChange} className="w-full p-2 border rounded">
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Accommodation Type</label>
+        <select name="accommodationType" value={form.accommodationType} onChange={handleChange} className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary">
           <option value="">Select...</option>
           <option value="Sharing in an apartment">Sharing in an apartment</option>
           <option value="Private room">Private room</option>
@@ -202,24 +202,24 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
       {/* Budget */}
       <div className="flex gap-4">
         <div className="flex-1 space-y-2">
-          <label>Budget Min</label>
+          <label className="block font-medium text-body-sm text-dark dark:text-white">Budget Min</label>
           <input
             type="number"
             name="budget.min"
             value={form.budget.min}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary"
           />
           {getError('budget.min')}
         </div>
         <div className="flex-1 space-y-2">
-          <label>Budget Max</label>
+          <label className="block font-medium text-body-sm text-dark dark:text-white">Budget Max</label>
           <input
             type="number"
             name="budget.max"
             value={form.budget.max}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary"
           />
           {getError('budget.max')}
         </div>
@@ -227,7 +227,7 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
 
       {/* Pets */}
       <div className="space-y-2">
-        <label>Do you have pets?</label>
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Do you have pets?</label>
         <div>
           <input type="checkbox" name="pets.hasPets" checked={form.pets.hasPets} onChange={handleChange} /> Yes
         </div>
@@ -239,7 +239,7 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
               placeholder="Pet type (e.g. dog, cat)"
               value={form.pets.type}
               onChange={handleChange}
-              className="block w-full p-2 mt-2 border rounded"
+              className="block w-full p-2 mt-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary"
             />
             {getError('pets.type')}
           </>
@@ -248,8 +248,8 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
 
       {/* Habits */}
       <div className="space-y-2">
-        <label>Sleep Pattern</label>
-        <select name="habits.sleepPattern" value={form.habits.sleepPattern} onChange={handleChange} className="w-full p-2 border rounded">
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Sleep Pattern</label>
+        <select name="habits.sleepPattern" value={form.habits.sleepPattern} onChange={handleChange} className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary">
           <option value="">Select...</option>
           <option value="Early Bird">Early Bird</option>
           <option value="Night Owl">Night Owl</option>
@@ -258,20 +258,20 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
       </div>
 
       <div className="flex gap-4">
-        <label>
+        <label className="block font-medium text-body-sm text-dark dark:text-white">
           <input type="checkbox" name="habits.drinking" checked={form.habits.drinking} onChange={handleChange} />
           <span className="ml-2">Drinks Alcohol</span>
         </label>
-        <label>
-          <input type="checkbox" name="habits.smoking" checked={form.habits.smoking} onChange={handleChange} />
-          <span className="ml-2">Smokes</span>
+        <label className="block font-medium text-body-sm text-dark dark:text-white">
+          <input className="rounded-lg border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary" type="checkbox" name="habits.smoking" checked={form.habits.smoking} onChange={handleChange} />
+          <span className="ml-2 ">Smokes</span>
         </label>
       </div>
 
       {/* Cooking */}
       <div className="space-y-2">
-        <label>Cooking Preference</label>
-        <select name="cooking" value={form.cooking} onChange={handleChange} className="w-full p-2 border rounded">
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Cooking Preference</label>
+        <select name="cooking" value={form.cooking} onChange={handleChange} className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary">
           <option value="">Select...</option>
           <option value="Home-cooked">Home-cooked</option>
           <option value="Eat out">Eat out</option>
@@ -282,7 +282,7 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
 
       <button
         type="submit"
-        className="w-full mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+        className="w-full rounded bg-primary px-4 py-2 text-dark transition hover:bg-opacity-90"
       >
         Finish Onboarding
       </button>

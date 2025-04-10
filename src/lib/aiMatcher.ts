@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import Together from "together-ai";
+import { Together } from "together-ai";
 import dotenv from "dotenv";
 
 dotenv.config({ path: "./.env" });
@@ -63,7 +63,7 @@ export async function findMatches(userId: string) {
     )
       score++;
 
-    const isMatch = score >= 8;
+    const isMatch = score >= 7;
 
     console.log(`${isMatch ? "yes" : "no"} ${u.name} — score: ${score}/10`);
 
