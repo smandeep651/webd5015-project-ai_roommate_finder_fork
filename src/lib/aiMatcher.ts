@@ -34,8 +34,35 @@ export async function findMatches(userId: string) {
     throw new Error("User or preferences not found");
   }
 
+  // 🔥 Get all match interactions (requests sent, received, and accepted)
+  const interactions = await prisma.match.findMany({
+    where: {
+      OR: [
+        { userId },
+        { matchId: userId },
+      ],
+    },
+    select: {
+      userId: true,
+      matchId: true,
+    },
+  });
+
+  // 🔥 Build a Set of user IDs to exclude
+  const excludeIds = new Set<string>();
+  for (const interaction of interactions) {
+    const otherUserId = interaction.userId === userId ? interaction.matchId : interaction.userId;
+    excludeIds.add(otherUserId);
+  }
+
+  // 🧠 Fetch users excluding self + all interacted ones
   const otherUsers = await prisma.user.findMany({
-    where: { id: { not: userId } },
+    where: {
+      id: {
+        not: userId,
+        notIn: Array.from(excludeIds), // ✅ exclude already requested or matched
+      },
+    },
     include: { preferences: true },
   });
 

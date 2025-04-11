@@ -20,10 +20,8 @@ export function UserInfo() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleLogout = async() => {
-    await signOut({ redirect: true, callbackUrl: '/auth/sign-in' }).then(() => {
-      window.location.href = 'auth/sign-in'
-    })
+  const handleLogout = () => {
+    signOut({ callbackUrl: `${window.location.origin}/auth/sign-in` });
   }
 
   useEffect(() => {
