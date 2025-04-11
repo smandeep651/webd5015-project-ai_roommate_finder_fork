@@ -76,6 +76,15 @@ export async function findMatches(userId: string) {
   return { matches, aiDescription };
 }
 
+export async function getMatchDetails(matchId: string) {
+  const match = await prisma.user.findUnique({
+    where: { id: matchId },
+    include: { preferences: true },
+  });
+
+  return match;
+}
+
 async function getAiMatchDescription(preferences: any, matchNames: string) {
   try {
     const response = await together.chat.completions.create({
