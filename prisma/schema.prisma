@@ -19,6 +19,7 @@ model User {
   role              String?      @default("User")
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
+  isPremium   Boolean  @default(false)
 
   preferences      Preferences?
   matchesSent      Match[]      @relation("UserMatchSender")
@@ -57,9 +58,11 @@ model Preferences {
 }
 
 model Match {
-  id        String   @id @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
-  matchId   String   @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId  // sender
+  matchId   String   @db.ObjectId  // receiver
+  message   String?  // message sent with the request
+  status    String   @default("pending") // "pending", "accepted", "rejected", etc.
   createdAt DateTime @default(now())
 
   sender   User @relation(name: "UserMatchSender", fields: [userId], references: [id])
@@ -67,10 +70,11 @@ model Match {
 }
 
 model Message {
-  id         String   @id @map("_id") @db.ObjectId
-  senderId   String   @db.ObjectId
+ id         String   @id @default(auto()) @map("_id") @db.ObjectId
+ senderId   String   @db.ObjectId
   receiverId String   @db.ObjectId
   message    String
+  status    String   @default("pending")
   timestamp  DateTime @default(now())
 
   sender   User @relation(name: "SentMessages", fields: [senderId], references: [id])
