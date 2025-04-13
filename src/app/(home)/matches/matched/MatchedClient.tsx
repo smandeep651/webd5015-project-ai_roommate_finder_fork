@@ -27,7 +27,7 @@ export default function MatchedClient({ matches }: { matches: any[] }) {
         <div
           key={match.id}
           onClick={() => router.push(`/chat/${match.id}`)}
-          className="cursor-pointer border p-4 bg-white rounded-xl shadow hover:shadow-lg transition"
+          className="cursor-pointer p-4 bg-white dark:bg-dark rounded-2xl shadow hover:shadow-lg transition"
         >
           <div className="flex items-center gap-4">
             <Image
@@ -38,8 +38,8 @@ export default function MatchedClient({ matches }: { matches: any[] }) {
               className="rounded-full object-cover"
             />
             <div>
-              <h2 className="font-semibold">{match.name}</h2>
-              <p className="text-sm text-gray-600 italic truncate max-w-xs">
+              <h2 className="font-semibold text-gray-800 dark:text-gray-1 text-lg">{match.name}</h2>
+              <p className="text-gray-800 dark:text-gray-4 mb-3 italic">
                 {match.lastMessageSender === currentUserId ? "You: " : ""}
                 {match.lastMessage || "No messages yet"}
               </p>

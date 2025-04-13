@@ -50,7 +50,7 @@ export default async function MatchedPage() {
 
   return (
     <main className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Matched Users</h1>
+      <h1 className="dark:text-white text-black text-2xl font-bold mb-4">Matched Users</h1>
       <MatchedClient matches={formattedMatches} />
     </main>
   );

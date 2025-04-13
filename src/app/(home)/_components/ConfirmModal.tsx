@@ -15,7 +15,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm 
     <div className="modal-overlay">
       <div className="modal-content">
         <h3 className="text-xl">Are you sure you want to remove this match?</h3>
-        <div className="mt-4 flex gap-10">
+        <div className="mt-4 flex gap-4">
           <button
             onClick={onConfirm}
             className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full"
@@ -24,7 +24,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm 
           </button>
           <button
             onClick={onClose}
-            className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400 w-full"
+            className="bg-gray-300 text-black py-2 rounded hover:bg-gray-400 w-full"
           >
             Cancel
           </button>
@@ -44,7 +44,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm 
           align-items: center;
         }
         .modal-content {
-          background-color: white;
+          background-color: #1F222A;
           padding: 20px;
           border-radius: 8px;
           text-align: center;

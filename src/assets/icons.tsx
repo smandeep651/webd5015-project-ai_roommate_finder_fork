@@ -239,6 +239,29 @@ export function MessageOutlineIcon(props: IconProps) {
   );
 }
 
+export function RemoveIcon(props: IconProps) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M9 3C8.44772 3 8 3.44772 8 4V5H5C4.44772 5 4 5.44772 4 6C4 6.55228 4.44772 7 5 7H19C19.5523 7 20 6.55228 20 6C20 5.44772 19.5523 5 19 5H16V4C16 3.44772 15.5523 3 15 3H9ZM10 5H14V4H10V5Z"
+      />
+      <path
+        d="M6 8H18L17.1942 19.2058C17.1084 20.3883 16.1191 21.25 14.9331 21.25H9.06688C7.88089 21.25 6.89161 20.3883 6.80584 19.2058L6 8Z"
+      />
+    </svg>
+  );
+}
+
+
 export function EmailIcon(props: IconProps) {
   return (
     <svg

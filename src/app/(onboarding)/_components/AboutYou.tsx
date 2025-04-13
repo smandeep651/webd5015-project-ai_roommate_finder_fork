@@ -48,30 +48,30 @@ const AboutYou = ({ initialData, onNext }: Props) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <h2 className="text-2xl font-bold text-center">Tell us about yourself 👋</h2>
+      <h2 className="text-2xl font-bold text-center text-black dark:text-white">Tell us about yourself 👋</h2>
 
       {/* Name */}
       <div className="space-y-2">
-        <label className="block font-medium">Full Name</label>
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Full Name</label>
         <input
           type="text"
           name="name"
           value={form.name}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary"
         />
         {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
       </div>
 
       {/* Age */}
       <div className="space-y-2">
-        <label className="block font-medium">Age</label>
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Age</label>
         <input
           type="number"
           name="age"
           value={form.age}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary"
           min={18}
         />
         {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
@@ -79,12 +79,12 @@ const AboutYou = ({ initialData, onNext }: Props) => {
 
       {/* Gender */}
       <div className="space-y-2">
-        <label className="block font-medium">Gender</label>
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Gender</label>
         <select
           name="sex"
           value={form.sex}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary"
         >
           <option value="">Select...</option>
           <option value="M">Male</option>
@@ -96,33 +96,33 @@ const AboutYou = ({ initialData, onNext }: Props) => {
 
       {/* Occupation */}
       <div className="space-y-2">
-        <label className="block font-medium">Occupation</label>
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Occupation</label>
         <input
           type="text"
           name="occupation"
           value={form.occupation}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary"
         />
         {errors.occupation && <p className="text-red-500 text-sm">{errors.occupation}</p>}
       </div>
 
       {/* Bio */}
       <div className="space-y-2">
-        <label className="block font-medium">Short Bio</label>
+        <label className="block font-medium text-body-sm text-dark dark:text-white">Short Bio</label>
         <textarea
           name="bio"
           value={form.bio}
           onChange={handleChange}
           rows={3}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition focus:border-primary disabled:cursor-default disabled:bg-gray-2 data-[active=true]:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary dark:disabled:bg-dark dark:data-[active=true]:border-primary"
         />
         {errors.bio && <p className="text-red-500 text-sm">{errors.bio}</p>}
       </div>
 
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+        className="w-full rounded bg-primary px-4 py-2 text-black transition hover:bg-opacity-90"
       >
         Continue
       </button>
