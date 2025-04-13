@@ -1,53 +1,81 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { users } from "./users.js"; // Ensure you include `.js` for ESM
+import { users } from "./users.js";
+import { adminUsers } from "./admin.js"; // ✅ import your new admin file
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
 async function seedDatabase() {
-    console.log(" Seeding database...");
+  console.log("🌱 Seeding database...");
 
-    for (const user of users) {
-        try {
-            const hashedPassword = await bcrypt.hash(user.password, 10);
+  // ✅ Seed Admins (no preferences)
+  for (const admin of adminUsers) {
+    try {
+      const hashedPassword = await bcrypt.hash(admin.password, 10);
 
-            await prisma.user.create({
-                data: {
-                    name: user.name, // Remove `id`
-                    email: user.email,
-                    password: hashedPassword,
-                    createdAt: new Date(user.createdAt),
-                    preferences: {
-                        create: {
-                            ethnicity: user.ethnicity,
-                            religion: user.religion,
-                            minAge: user.ageRange.min,
-                            maxAge: user.ageRange.max,
-                            sex: user.sex,
-                            genderPreference: user.genderPreference,
-                            occupation: user.occupation,
-                            preferredLocation: user.preferredLocation,
-                            hasPets: user.pets.hasPets,
-                            petType: user.pets.type,
-                            minBudget: user.budget.min,
-                            maxBudget: user.budget.max,
-                            accommodationType: user.accommodationType,
-                            sleepPattern: user.habits.sleepPattern,
-                            drinking: user.habits.drinking,
-                            smoking: user.habits.smoking,
-                            cooking: user.cooking,
-                        }   as Prisma.PreferencesCreateWithoutUserInput
-                    } 
-                }
-            });
-            console.log(` Added user: ${user.name}`);
-        } catch (error) {
-            console.error(` Error adding user ${user.name}:`, error);
-        }
+      await prisma.user.create({
+        data: {
+          name: admin.name,
+          email: admin.email,
+          password: hashedPassword,
+          role: "Admin",
+          bio: "Admin account",
+          image: admin.image,
+          isPremium: true,
+        },
+      });
+
+      console.log(`✅ Added admin: ${admin.name}`);
+    } catch (error) {
+      console.error(`❌ Error adding admin ${admin.name}:`, error);
     }
+  }
 
-    console.log(" Seeding complete!");
-    await prisma.$disconnect();
+  // ✅ Seed Roommate Users (with preferences)
+  for (const user of users) {
+    try {
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+
+      await prisma.user.create({
+        data: {
+          name: user.name,
+          email: user.email,
+          password: hashedPassword,
+          image: user.image,
+          bio: user.bio,
+          createdAt: new Date(user.createdAt),
+          preferences: {
+            create: {
+              ethnicity: user.ethnicity,
+              religion: user.religion,
+              minAge: user.ageRange.min,
+              maxAge: user.ageRange.max,
+              sex: user.sex,
+              genderPreference: user.genderPreference,
+              occupation: user.occupation,
+              preferredLocation: user.preferredLocation,
+              hasPets: user.pets.hasPets,
+              petType: user.pets.type,
+              minBudget: user.budget.min,
+              maxBudget: user.budget.max,
+              accommodationType: user.accommodationType,
+              sleepPattern: user.habits.sleepPattern,
+              drinking: user.habits.drinking,
+              smoking: user.habits.smoking,
+              cooking: user.cooking,
+            } as Prisma.PreferencesCreateWithoutUserInput,
+          },
+        },
+      });
+
+      console.log(`✅ Added user: ${user.name}`);
+    } catch (error) {
+      console.error(`❌ Error adding user ${user.name}:`, error);
+    }
+  }
+
+  console.log("✅ Seeding complete!");
+  await prisma.$disconnect();
 }
 
 seedDatabase();

@@ -7,14 +7,20 @@ import { Checkbox } from "../../../components/FormElements/checkbox";
 import { useActionState } from 'react';
 import { authenticate } from '@/lib/actions';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from "next/navigation";
+
 
 export default function SigninWithPassword() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
-  const [errorMessage, formAction, isPending] = useActionState(
-    authenticate,
-    undefined,
-  );
+  const [result, formAction, isPending] = useActionState(authenticate, undefined);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (typeof result === "string" && result.startsWith("/")) {
+      router.push(result);
+    }
+  }, [result, router]);
   
   const [data, setData] = useState({
     email: process.env.NEXT_PUBLIC_DEMO_USER_MAIL || "",
@@ -107,11 +113,11 @@ export default function SigninWithPassword() {
           aria-live="polite"
           aria-atomic="true"
         >
-          {errorMessage && (
-            <>
-              <p className="text-sm text-red-500">{errorMessage}</p>
-            </>
-          )}
+  {typeof result === "string" && !result.startsWith("/") && (
+  <div className="flex h-8 items-end space-x-1" aria-live="polite" aria-atomic="true">
+    <p className="text-sm text-red-500">{result}</p>
+  </div>
+)}
         </div>
       </div>
     </form>
