@@ -15,13 +15,13 @@ export default async function HomePage() {
 
   return (
     <main className="p-6">
-      <h1 className="text-3xl font-bold mb-4">Possible Matches</h1>
-      <p className="text-gray-700 mb-8">{aiDescription}</p>
+      <h1 className="dark:text-white text-black text-3xl font-bold mb-2">Possible Matches</h1>
+      <p className="text-gray-700 mb-6">{aiDescription}</p>
 
       {matches.length === 0 ? (
         <p className="text-gray-500">No matches found at the moment.</p>
       ) : (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           {matches.map((match) => (
             <MatchCard
               key={match.id}
