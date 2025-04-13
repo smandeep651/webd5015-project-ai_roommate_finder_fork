@@ -5,9 +5,10 @@ import React from "react";
 type Props = {
   open: boolean;
   onClose: () => void;
+  onUpgradeClick: () => void;
 };
 
-export default function PremiumLimitModal({ open, onClose }: Props) {
+export default function PremiumLimitModal({ open, onClose, onUpgradeClick }: Props) {
   if (!open) return null;
 
   return (
@@ -27,7 +28,7 @@ export default function PremiumLimitModal({ open, onClose }: Props) {
           </button>
           <button
             className="px-4 py-2 bg-black text-white text-sm rounded hover:bg-gray-900"
-            onClick={() => window.location.href = "/premium"}
+            onClick={onUpgradeClick}
           >
             Upgrade to Premium
           </button>
