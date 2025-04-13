@@ -282,7 +282,7 @@ const PreferencesForm = ({ initialData, onNext }: Props) => {
 
       <button
         type="submit"
-        className="w-full rounded bg-primary px-4 py-2 text-dark transition hover:bg-opacity-90"
+        className="w-full rounded bg-primary px-4 py-2 text-white transition hover:bg-opacity-90"
       >
         Finish Onboarding
       </button>

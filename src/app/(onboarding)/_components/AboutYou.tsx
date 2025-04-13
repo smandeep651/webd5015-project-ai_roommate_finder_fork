@@ -122,7 +122,7 @@ const AboutYou = ({ initialData, onNext }: Props) => {
 
       <button
         type="submit"
-        className="w-full rounded bg-primary px-4 py-2 text-black transition hover:bg-opacity-90"
+        className="w-full rounded bg-primary px-4 py-2 text-white transition hover:bg-opacity-90"
       >
         Continue
       </button>

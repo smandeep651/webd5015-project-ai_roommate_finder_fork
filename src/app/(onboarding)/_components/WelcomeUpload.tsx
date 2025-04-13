@@ -62,7 +62,24 @@ const WelcomeUpload = ({ onImageUpload }: Props) => {
   };
 
   return (
-    <div className="w-full max-w-xl rounded-lg bg-white p-6 shadow-md dark:bg-boxdark">
+    <div className="w-full max-w-xl rounded-lg bg-dark p-6 flex-wrap flex justify-center">
+
+      <Link className="mb-10 inline-block" href="/">
+        <Image
+          className="hidden dark:block"
+          src={"/images/logo/logo.svg"}
+          alt="Logo"
+          width={176}
+          height={32}
+        />
+        <Image
+          className="dark:hidden"
+          src={"/images/logo/logo-dark.svg"}
+          alt="Logo"
+          width={176}
+          height={32}
+        />
+      </Link>
       <h2 className="mb-1 text-2xl font-bold text-black dark:text-white text-center">
         Welcome to Roommate Finder 🎉
       </h2>
@@ -77,7 +94,7 @@ const WelcomeUpload = ({ onImageUpload }: Props) => {
             accept="image/*"
             onChange={handleFileChange}
             disabled={uploading}
-            className="block w-full cursor-pointer rounded-lg border border-primary bg-transparent p-3 text-sm text-body-color file:mr-5 file:rounded file:border-[0.5px] file:border-primary file:bg-primary file:px-5 file:py-2 file:text-body-color hover:file:cursor-pointer"
+            className="block w-full cursor-pointer rounded-full border border-primary bg-transparent p-3 text-sm text-body-color file:mr-5 file:rounded-full file:bg-primary file:px-5 file:py-2 file:text-body-color hover:file:cursor-pointer"
           />
         </div>
       )}
@@ -92,7 +109,7 @@ const WelcomeUpload = ({ onImageUpload }: Props) => {
                 type="button"
                 onClick={handleUpload}
                 disabled={uploading}
-                className="w-full rounded bg-primary px-4 py-2 text-dark transition hover:bg-opacity-90"
+                className="w-full rounded bg-primary px-4 py-2 text-white transition hover:bg-opacity-90"
               >
                 {uploading ? 'Uploading...' : 'Upload Image'}
               </button>
