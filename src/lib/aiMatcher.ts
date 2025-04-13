@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import Together from "together-ai";
+import { Together } from "together-ai";
 import dotenv from "dotenv";
 
 dotenv.config({ path: "./.env" });
@@ -101,6 +101,15 @@ export async function findMatches(userId: string) {
   const aiDescription = await getAiMatchDescription(myPref, matchNames);
 
   return { matches, aiDescription };
+}
+
+export async function getMatchDetails(matchId: string) {
+  const match = await prisma.user.findUnique({
+    where: { id: matchId },
+    include: { preferences: true },
+  });
+
+  return match;
 }
 
 async function getAiMatchDescription(preferences: any, matchNames: string) {
