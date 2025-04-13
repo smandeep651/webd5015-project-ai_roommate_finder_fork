@@ -8,22 +8,33 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  email      String   @unique
-  password   String
-  createdAt  DateTime @default(now())
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
+  name              String?
+  email             String?      @unique
+  profileComplete  Boolean  @default(false) 
+  emailVerified     DateTime?
+  password          String?
+  image             String?
+  bio               String?
+  role              String?      @default("User")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   preferences      Preferences?
   matchesSent      Match[]      @relation("UserMatchSender")
   matchesReceived  Match[]      @relation("UserMatchReceiver")
   messagesSent     Message[]    @relation("SentMessages")
   messagesReceived Message[]    @relation("ReceivedMessages")
+
+  // NextAuth relations
+  accounts      Account[]
+  sessions      Session[]
+  Authenticator Authenticator[]
 }
 
 model Preferences {
   id                 String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @unique @db.ObjectId
+  userId             String  @unique @db.ObjectId
   ethnicity         String?
   religion          String?
   minAge            Int
@@ -64,4 +75,63 @@ model Message {
 
   sender   User @relation(name: "SentMessages", fields: [senderId], references: [id])
   receiver User @relation(name: "ReceivedMessages", fields: [receiverId], references: [id])
+}
+
+// NextAuth Models
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Authenticator {
+  credentialID         String  @id @map("_id")
+  userId               String  @db.ObjectId
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, credentialID])
 }

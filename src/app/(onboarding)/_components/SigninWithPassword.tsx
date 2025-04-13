@@ -2,10 +2,20 @@
 import { EmailIcon, PasswordIcon } from "@/assets/icons";
 import Link from "next/link";
 import React, { useState } from "react";
-import InputGroup from "../FormElements/InputGroup";
-import { Checkbox } from "../FormElements/checkbox";
+import InputGroup from "../../../components/FormElements/InputGroup";
+import { Checkbox } from "../../../components/FormElements/checkbox";
+import { useActionState } from 'react';
+import { authenticate } from '@/lib/actions';
+import { useSearchParams } from 'next/navigation';
 
 export default function SigninWithPassword() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
+  const [errorMessage, formAction, isPending] = useActionState(
+    authenticate,
+    undefined,
+  );
+  
   const [data, setData] = useState({
     email: process.env.NEXT_PUBLIC_DEMO_USER_MAIL || "",
     password: process.env.NEXT_PUBLIC_DEMO_USER_PASS || "",
@@ -33,7 +43,8 @@ export default function SigninWithPassword() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    // <form onSubmit={handleSubmit}>
+    <form action={formAction}>
       <InputGroup
         type="email"
         label="Email"
@@ -80,7 +91,9 @@ export default function SigninWithPassword() {
       </div>
 
       <div className="mb-4.5">
+        <input type="hidden" name="redirectTo" value={callbackUrl} />
         <button
+          aria-disabled={isPending}
           type="submit"
           className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary p-4 font-medium text-white transition hover:bg-opacity-90"
         >
@@ -89,6 +102,17 @@ export default function SigninWithPassword() {
             <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-t-transparent dark:border-primary dark:border-t-transparent" />
           )}
         </button>
+        <div
+          className="flex h-8 items-end space-x-1"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {errorMessage && (
+            <>
+              <p className="text-sm text-red-500">{errorMessage}</p>
+            </>
+          )}
+        </div>
       </div>
     </form>
   );

@@ -1,6 +1,7 @@
 import Link from "next/link";
-import GoogleSigninButton from "../GoogleSigninButton";
-import SigninWithPassword from "../SigninWithPassword";
+import GoogleSigninButton from "./GoogleSigninButton";
+import SigninWithPassword from "./SigninWithPassword";
+import { Suspense } from "react";
 
 export default function Signin() {
   return (
@@ -16,7 +17,9 @@ export default function Signin() {
       </div>
 
       <div>
-        <SigninWithPassword />
+        <Suspense>
+          <SigninWithPassword />
+        </Suspense>
       </div>
 
       <div className="mt-6 text-center">
