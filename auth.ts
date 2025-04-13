@@ -83,6 +83,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   
         if (dbUser) {
           // ✅ Override the default Google image if you have a custom one
+          session.user.role = dbUser.role;
           session.user.image = dbUser.image || session.user.image;
         }
       }
