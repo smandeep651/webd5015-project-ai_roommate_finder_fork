@@ -68,7 +68,7 @@ export function Sidebar() {
             <Link
               href={"/"}
               onClick={() => isMobile && toggleSidebar()}
-              className="px-0 py-2.5 min-[850px]:py-0"
+              className="px-0 py-2.5 min-[850px]:py-0 rounded-full"
             >
               <Logo />
             </Link>

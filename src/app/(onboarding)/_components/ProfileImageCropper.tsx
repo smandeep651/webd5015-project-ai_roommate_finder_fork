@@ -20,7 +20,7 @@ const ProfileImageCropper = ({ imageSrc, onCropComplete }: Props) => {
   }, [croppedAreaPixels]);
 
   return (
-    <div className="relative w-full h-64 bg-black">
+    <div className="relative w-full h-64 rounded-lg border-[1.5px] border-stroke bg-transparent dark:border-dark-3 dark:bg-dark-2 overflow-hidden transition-all">
       <Cropper
         image={imageSrc}
         crop={crop}
@@ -32,7 +32,7 @@ const ProfileImageCropper = ({ imageSrc, onCropComplete }: Props) => {
       />
       <button
         onClick={onCropDone}
-        className="absolute bottom-4 right-4 px-4 py-2 bg-blue-600 text-white rounded shadow"
+        className="absolute bottom-4 right-4 px-5 py-2.5 text-body-sm font-medium text-white bg-primary hover:bg-opacity-90 rounded-lg shadow transition"
       >
         Crop & Upload
       </button>

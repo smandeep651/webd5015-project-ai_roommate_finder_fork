@@ -127,7 +127,7 @@ export default function RequestsPage({ requests }: RequestsPageProps) {
 
   return (
     <main className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Received Match Requests</h1>
+      <h1 className="dark:text-white text-black text-2xl font-bold mb-2">Received Match Requests</h1>
 
       {/* Success Message with Fade-Out */}
       {successMessage && (
@@ -149,7 +149,7 @@ export default function RequestsPage({ requests }: RequestsPageProps) {
           {requestsList.map((req) => (
             <div
               key={req.id}
-              className={`border rounded-xl p-4 bg-white shadow flex items-start gap-4 transition-opacity duration-1000 ${
+              className={`rounded-2xl p-4 bg-white dark:bg-dark shadow flex items-start gap-4 transition-opacity duration-1000 ${
                 req.fadeOut ? "opacity-0" : "opacity-100"
               }`} // Apply fade-out class when fadeOut is true
             >
@@ -161,9 +161,9 @@ export default function RequestsPage({ requests }: RequestsPageProps) {
                 className="rounded-full object-cover"
               />
               <div className="flex-1">
-                <h2 className="font-semibold text-lg">{req.sender.name}</h2>
-                <p className="text-sm text-gray-600 italic mb-2">{req.sender.bio}</p>
-                <p className="text-gray-800 mb-3">
+                <h2 className="font-semibold text-gray-800 dark:text-gray-1 text-lg">{req.sender.name}</h2>
+                <p className="text-sm text-gray-800 dark:text-gray-5 italic mb-2">{req.sender.bio}</p>
+                <p className="text-gray-800 dark:text-gray-4 mb-3">
                   <strong>Message:</strong> {req.message}
                 </p>
                 <div className="flex gap-3">

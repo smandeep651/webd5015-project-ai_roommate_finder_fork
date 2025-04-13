@@ -13,8 +13,8 @@ import { auth } from "../../auth";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | NextAdmin",
-    default: "NextAdmin",
+    template: "%s | Roommate",
+    default: "Roommate",
   },
   description: "Next.js dashboard kit.",
 };
@@ -25,7 +25,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <SessionProvider session={session}>
       <html lang="en" suppressHydrationWarning>
-        <body>
+        <body className="min-h-screen bg-gray-2 dark:bg-[#181A20]">
           <Providers>
             <NextTopLoader showSpinner={false} />
             {children}

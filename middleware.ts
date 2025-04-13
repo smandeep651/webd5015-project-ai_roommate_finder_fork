@@ -8,6 +8,7 @@ export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
+
   // Define public routes (won't be protected)
   const publicRoutes = [
     '/auth/sign-in',
@@ -46,4 +47,4 @@ export default auth((req) => {
 
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
-};
+};  
