@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import ProfileImageCropper from './ProfileImageCropper';
 import { uploadToCloudinary } from '@/lib/uploadToCloudinary';
+import Link from 'next/link';
+import Image from 'next/image';
 
 type Props = {
   onImageUpload: (url: string) => void;
@@ -75,7 +77,7 @@ const WelcomeUpload = ({ onImageUpload }: Props) => {
             accept="image/*"
             onChange={handleFileChange}
             disabled={uploading}
-            className="block w-full cursor-pointer rounded-lg border border-stroke bg-transparent p-3 text-sm text-body-color file:mr-5 file:rounded file:border-[0.5px] file:border-stroke file:bg-gray-100 file:px-5 file:py-2 file:text-body-color hover:file:cursor-pointer"
+            className="block w-full cursor-pointer rounded-lg border border-primary bg-transparent p-3 text-sm text-body-color file:mr-5 file:rounded file:border-[0.5px] file:border-primary file:bg-primary file:px-5 file:py-2 file:text-body-color hover:file:cursor-pointer"
           />
         </div>
       )}
@@ -90,7 +92,7 @@ const WelcomeUpload = ({ onImageUpload }: Props) => {
                 type="button"
                 onClick={handleUpload}
                 disabled={uploading}
-                className="w-full rounded bg-primary px-4 py-2 text-white transition hover:bg-opacity-90"
+                className="w-full rounded bg-primary px-4 py-2 text-dark transition hover:bg-opacity-90"
               >
                 {uploading ? 'Uploading...' : 'Upload Image'}
               </button>

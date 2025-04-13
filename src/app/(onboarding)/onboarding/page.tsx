@@ -83,8 +83,8 @@ export default function OnboardingPage() {
 
 {step === 4 && (
   <div className="text-center space-y-4">
-    <h2 className="text-2xl font-bold">🎉 All Set!</h2>
-    <p className="text-gray-600">Here's a summary of your profile before we find your matches.</p>
+    <h2 className="mb-1 text-2xl font-bold text-black dark:text-white text-center">🎉 All Set!</h2>
+    <p className="mb-5 text-center text-gray-500 dark:text-gray-300">Here's a summary of your profile before we find your matches.</p>
 
     <div className="text-left text-sm bg-gray-50 p-4 rounded border">
       <pre>{JSON.stringify(formData, null, 2)}</pre>
@@ -106,12 +106,12 @@ export default function OnboardingPage() {
 
           if (!res.ok) throw new Error("Failed to update user");
 
-          window.location.href = "/home"; // redirect to dashboard
+          window.location.href = "/home";
         } catch (err) {
           console.error("Error submitting form:", err);
         }
       }}
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      className="w-full rounded bg-primary px-4 py-2 text-dark transition hover:bg-opacity-90"
     >
       🔍 Find My Matches
     </button>

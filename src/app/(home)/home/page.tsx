@@ -1,6 +1,10 @@
 
 import { auth } from "@/lib/actions";
 import { findMatches } from "@/lib/aiMatcher";
+import Image from "next/image";
+import { Button } from "@/components/ui-elements/button";
+import { LikeIcon, MessageOutlineIcon, RemoveIcon } from "@/assets/icons";
+import Link from "next/link";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import MatchCard from "../_components/MatchCard";
@@ -19,7 +23,9 @@ export default async function HomePage() {
       <p className="text-gray-700 mb-8">{aiDescription}</p>
 
       {matches.length === 0 ? (
-        <p className="text-gray-500">No matches found at the moment.</p>
+        <p className="text-gray-500 dark:text-gray-400">
+          No matches found at the moment. Please check back later.
+        </p>
       ) : (
         <div className="flex flex-col gap-6">
           {matches.map((match) => (

@@ -9,7 +9,7 @@ export default function HomeLayout({ children }: PropsWithChildren) {
     <div className="flex min-h-screen">
       <Sidebar />
 
-      <div className="w-full bg-gray-2 dark:bg-gradient-to-t from-[#2C2C2C] to-[#181A20]">
+      <div className="w-full">
         <Header />
         <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
           {children}
