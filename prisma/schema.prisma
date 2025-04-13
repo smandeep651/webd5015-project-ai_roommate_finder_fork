@@ -20,19 +20,7 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   isPremium       Boolean   @default(false)
-  stripeCustomerId String? 
-  id              String    @id @default(auto()) @map("_id") @db.ObjectId
-  name            String?
-  email           String?   @unique
-  profileComplete Boolean   @default(false)
-  emailVerified   DateTime?
-  password        String?
-  image           String?
-  bio             String?
-  role            String?   @default("User")
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  isPremium       Boolean   @default(false)
+  stripeCustomerId String?
 
   preferences      Preferences?
   matchesSent      Match[]      @relation("UserMatchSender")
@@ -47,8 +35,6 @@ model User {
 }
 
 model Preferences {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @unique @db.ObjectId
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
   userId            String  @unique @db.ObjectId
   ethnicity         String?
@@ -77,9 +63,6 @@ model Match {
   userId    String   @db.ObjectId // sender
   matchId   String   @db.ObjectId // receiver
   message   String? // message sent with the request
-  userId    String   @db.ObjectId // sender
-  matchId   String   @db.ObjectId // receiver
-  message   String? // message sent with the request
   status    String   @default("pending") // "pending", "accepted", "rejected", etc.
   createdAt DateTime @default(now())
 
@@ -90,11 +73,8 @@ model Match {
 model Message {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   senderId   String   @db.ObjectId
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  senderId   String   @db.ObjectId
   receiverId String   @db.ObjectId
   message    String
-  status     String   @default("pending")
   status     String   @default("pending")
   timestamp  DateTime @default(now())
 
@@ -160,4 +140,3 @@ model Authenticator {
 
   @@unique([userId, credentialID])
 }
-
