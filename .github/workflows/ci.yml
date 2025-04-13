@@ -1,0 +1,30 @@
+name: CI Pipeline for Feature Branch 26-ci-cd-pipeline
+
+on:
+  push:
+    branches:
+      - 26-ci-cd-pipeline  # Your feature branch
+  pull_request:
+    branches:
+      - 26-ci-cd-pipeline  # Your feature branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'  # Adjust to your desired Node.js version
+
+    - name: Install dependencies
+      run: |
+        npm install
+    
+    - name: Run tests
+      run: |
+        npm test
