@@ -79,7 +79,10 @@ export function UserInfo() {
               {session?.user?.name}
             </div>
 
-            <div className="leading-none text-gray-6">{session?.user?.email}</div>
+            <div className="overflow-hidden text-ellipsis whitespace-nowrap text-gray-400 max-w-[150px]">
+              {session?.user?.email}
+            </div>
+
           </figcaption>
         </figure>
 

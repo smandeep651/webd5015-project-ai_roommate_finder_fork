@@ -154,11 +154,11 @@ export default function ChatBox({ match, currentUserId, onRemove }: ChatBoxProps
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-white dark:bg-dark">
+      <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-white dark:bg-dark-2">
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`p-2 rounded shadow w-fit max-w-xs ${msg.senderId === currentUserId ? "bg-gray-1 text-black ml-auto" : "bg-gray-1  text-black"}`}
+            className={`mx-4 p-2 px-4 rounded-full shadow w-fit max-w-xs ${msg.senderId === currentUserId ? "bg-primary text-white ml-auto" : "bg-gray-1  text-black"}`}
           >
             {msg.message}
           </div>

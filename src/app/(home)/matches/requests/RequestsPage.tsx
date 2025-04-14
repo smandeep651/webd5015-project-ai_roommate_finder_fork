@@ -149,7 +149,7 @@ export default function RequestsPage({ requests }: RequestsPageProps) {
           {requestsList.map((req) => (
             <div
               key={req.id}
-              className={`rounded-2xl p-4 bg-white dark:bg-dark shadow flex items-start gap-4 transition-opacity duration-1000 ${
+              className={`rounded-2xl p-4 bg-white dark:bg-dark-2 shadow flex items-start gap-4 transition-opacity duration-1000 ${
                 req.fadeOut ? "opacity-0" : "opacity-100"
               }`} // Apply fade-out class when fadeOut is true
             >
@@ -170,7 +170,7 @@ export default function RequestsPage({ requests }: RequestsPageProps) {
                   <button
                     onClick={() => handleApprove(req.id)}
                     disabled={loading}
-                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                    className="bg-[#A8D86D] text-white px-4 py-2 rounded hover:bg-green-700"
                   >
                     {loading ? "Approving..." : "Approve"}
                   </button>
@@ -178,7 +178,7 @@ export default function RequestsPage({ requests }: RequestsPageProps) {
                   <button
                     onClick={() => handleReject(req.id)}
                     disabled={loading}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                    className="bg-[#D25C5C] text-white px-4 py-2 rounded hover:bg-red-600"
                   >
                     {loading ? "Rejecting..." : "Remove"}
                   </button>

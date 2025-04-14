@@ -25,7 +25,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <SessionProvider session={session}>
       <html lang="en" suppressHydrationWarning>
-        <body className="min-h-screen bg-gray-2 dark:bg-[#181A20]">
+        <body className="min-h-screen bg-gray-2 dark:bg-dark">
           <Providers>
             <NextTopLoader showSpinner={false} />
             {children}

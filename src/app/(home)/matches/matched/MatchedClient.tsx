@@ -27,7 +27,7 @@ export default function MatchedClient({ matches }: { matches: any[] }) {
         <div
           key={match.id}
           onClick={() => router.push(`/chat/${match.id}`)}
-          className="cursor-pointer p-4 bg-white dark:bg-dark rounded-2xl shadow hover:shadow-lg transition"
+          className="cursor-pointer p-4 bg-white dark:bg-dark-2 rounded-2xl shadow hover:shadow-lg transition"
         >
           <div className="flex items-center gap-4">
             <Image
