@@ -48,7 +48,7 @@ export default async function HomePage() {
             <MatchCard
               key={match.id}
               match={match}
-              userId={session.user.id}
+              userId={session?.user?.id}
               onSubmit={async (id, message) => {
                 "use server";
                 await sendMatchRequest({ matchId: id, message });
