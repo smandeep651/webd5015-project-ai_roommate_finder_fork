@@ -261,7 +261,6 @@ export function RemoveIcon(props: IconProps) {
   );
 }
 
-
 export function EmailIcon(props: IconProps) {
   return (
     <svg

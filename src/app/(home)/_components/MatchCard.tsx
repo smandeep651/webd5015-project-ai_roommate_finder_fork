@@ -187,6 +187,7 @@ import { useState } from "react";
 import ConfirmModal from "./ConfirmModal";
 import PremiumLimitModal from "./PremiumLimitModal";
 import PricingModal from "./PricingModal"; // ✅ Added
+import MatchDetailsModal from "./MatchDetailsModal";
 
 type MatchCardProps = {
   match: any;
@@ -202,7 +203,8 @@ export default function MatchCard({ match, onSubmit, userId }: MatchCardProps) {
   const [isRemoving, setIsRemoving] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
-  const [showPricingModal, setShowPricingModal] = useState(false); // ✅ Added
+  const [showPricingModal, setShowPricingModal] = useState(false); 
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   const handleSend = async () => {
     try {
@@ -281,6 +283,13 @@ export default function MatchCard({ match, onSubmit, userId }: MatchCardProps) {
         onConfirm={handleRemove}
       />
 
+       {/* Match Details Modal */}
+       <MatchDetailsModal
+        isOpen={showDetailsModal}
+        onClose={() => setShowDetailsModal(false)}
+        match={match}
+      />
+
       {/* ✅ Premium popup */}
       <PremiumLimitModal
         open={showPremiumModal}
@@ -312,7 +321,9 @@ export default function MatchCard({ match, onSubmit, userId }: MatchCardProps) {
 
         {/* Roommate Details */}
         <div className="flex-1 p-6">
-          <h2 className="text-[22px] text-black dark:text-white font-semibold pb-1">{match.name}</h2>
+          <h2 onClick={() => setShowDetailsModal(true)} className="cursor-pointer text-[22px] font-semibold pb-1 text-black dark:text-white hover:text-primary dark:hover:text-primary">
+            {match.name}
+          </h2>
           <p className="text-gray-400 text-sm flex flex-wrap gap-2">
             {match.preferences?.country && <span>From {match.preferences.country} •</span>}
             {match.preferences?.age && <span>{match.preferences.age} years •</span>}
@@ -360,12 +371,12 @@ export default function MatchCard({ match, onSubmit, userId }: MatchCardProps) {
             </div>
           ) : (
             <div className="flex gap-3">
-              <button onClick={() => setShowInput(true)} className="bg-primary text-white px-4 py-2 rounded hover:bg-grey">
+              <button onClick={() => setShowInput(true)} className="bg-primary hover:bg-primaryhover text-white px-4 py-2 rounded hover:bg-grey">
                 Send Match Request
               </button>
               <button
                 onClick={() => setShowConfirm(true)}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                className="bg-[#D25C5C] text-white px-4 py-2 rounded hover:bg-[#b04d4d]"
               >
                 Remove
               </button>

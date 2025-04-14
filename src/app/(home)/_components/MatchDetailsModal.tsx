@@ -4,7 +4,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { Dialog } from "@headlessui/react";
-import { RemoveIcon } from "@/assets/icons";
+import { CloseIcon } from "@/assets/icons";
 
 
 type MatchDetailsModalProps = {
@@ -23,19 +23,19 @@ export default function MatchDetailsModal({ isOpen, onClose, match }: MatchDetai
         <Dialog.Panel className="bg-white dark:bg-dark-2 rounded-lg shadow-lg max-w-3xl w-full p-6">
           <div className="text-right">
             <button onClick={onClose} className="text-gray-500 dark:text-gray-400">
-              <RemoveIcon className="w-6 h-6" />
+              <CloseIcon className="w-6 h-6" />
             </button>
           </div>
 
-          <div className="text-center mb-6">
+          <div className="text-center my-6">
             <Image
               src={match.image || "/images/user/default.png"}
               alt={match.name}
               width={140}
               height={140}
-              className="rounded-full object-cover mb-4 border-4 border-primary"
+              className="object-cover z-30 mx-auto -mt-28 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-[176px] sm:p-3"
             />
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">{match.name}</h1>
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mt-5">{match.name}</h1>
             <p className="text-gray-500 dark:text-gray-400">
               Looking for {match.preferences?.genderPreference || "Not specified"} Roommate · {match.preferences?.age || "N/A"} years old ·{" "}
               {match.preferences?.occupation || "Occupation unknown"}

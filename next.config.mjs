@@ -12,6 +12,11 @@ const nextConfig = {
         port: ""
       },
       {
+        protocol: 'https',
+        hostname: 'source.unsplash.com',
+        pathname: '/512x512/?portrait,face',
+      },
+      {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
         port: ""
