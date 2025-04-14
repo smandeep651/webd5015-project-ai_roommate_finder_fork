@@ -17,6 +17,7 @@ type InputGroupProps = {
   iconPosition?: "left" | "right";
   height?: "sm" | "default";
   defaultValue?: string;
+  error?: string;
 };
 
 const InputGroup: React.FC<InputGroupProps> = ({
@@ -73,6 +74,9 @@ const InputGroup: React.FC<InputGroupProps> = ({
         />
 
         {icon}
+        {props.error && (
+          <p className="mt-1 text-sm text-red-500 dark:text-red-400">{props.error}</p>
+        )}
       </div>
     </div>
   );

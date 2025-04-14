@@ -8,6 +8,7 @@ type PropsType = {
   label: string;
   name?: string;
   minimal?: boolean;
+  disabled?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   radius?: "default" | "md";
 };
@@ -18,6 +19,7 @@ export function Checkbox({
   name,
   withBg,
   minimal,
+  disabled,
   onChange,
   radius,
 }: PropsType) {
@@ -39,6 +41,7 @@ export function Checkbox({
             name={name}
             id={id}
             className="peer sr-only"
+            disabled={disabled}
           />
 
           <div
