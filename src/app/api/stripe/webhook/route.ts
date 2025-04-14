@@ -50,7 +50,6 @@ export async function POST(req: Request) {
               isPremium: isActive 
             },
           });
-          console.log(`✅ ${event.type} - Linked Stripe customer ${customerId} to user ${userId} (Premium: ${isActive})`);
         } else {
           console.warn("⚠️ Missing userId or customerId in session metadata");
         }
@@ -67,7 +66,6 @@ export async function POST(req: Request) {
           data: { isPremium: false },
         });
 
-        console.log(`⚠️ ${event.type} Subscription canceled for ${customerId}`);
         break;
       }
 
