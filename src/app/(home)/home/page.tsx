@@ -43,21 +43,19 @@ export default async function HomePage() {
           No matches found at the moment. Please check back later.
         </p>
       ) : (
-        <>
-          <div className="flex flex-col gap-4 mt-6">
-            {matches.map((match) => (
-              <MatchCard
-                key={match.id}
-                match={match}
-                userId={session.user.id}
-                onSubmit={async (id, message) => {
-                  "use server";
-                  await sendMatchRequest({ matchId: id, message });
-                }}
-              />
-            ))}
-          </div>
-        </>
+        <div className="flex flex-col gap-6">
+          {matches.map((match) => (
+            <MatchCard
+              key={match.id}
+              match={match}
+              userId={session.user.id}
+              onSubmit={async (id, message) => {
+                "use server";
+                await sendMatchRequest({ matchId: id, message });
+              }}
+            />
+          ))}
+        </div>
       )}
     </main>
   );
