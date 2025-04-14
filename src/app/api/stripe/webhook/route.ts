@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { prisma } from "../../../../../prisma"; // Adjust path as needed
+import { prisma } from "../../../../../prisma";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-10-16" as any,
@@ -11,7 +11,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const sig = headers().get("stripe-signature") as string;
+  const requestHeaders = await headers();
+  const sig = requestHeaders.get("stripe-signature") as string;
 
   let event: Stripe.Event;
 
@@ -32,33 +33,30 @@ export async function POST(req: Request) {
         const session = event.data.object as Stripe.Checkout.Session;
         const customerId = session.customer as string;
         const userId = session.metadata?.userId;
-
+      
+        let isActive = false;
+        const subscriptionId = session.subscription as string;
+      
+        if (subscriptionId) {
+          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+          isActive = ["active", "trialing"].includes(subscription.status);
+        }
+      
         if (userId && customerId) {
           await prisma.user.update({
             where: { id: userId },
-            data: { stripeCustomerId: customerId },
+            data: { 
+              stripeCustomerId: customerId,
+              isPremium: isActive 
+            },
           });
-          console.log(`✅ Linked Stripe customer ${customerId} to user ${userId}`);
+          console.log(`✅ ${event.type} - Linked Stripe customer ${customerId} to user ${userId} (Premium: ${isActive})`);
         } else {
           console.warn("⚠️ Missing userId or customerId in session metadata");
         }
+      
         break;
-      }
-
-      case "customer.subscription.created":
-      case "customer.subscription.updated": {
-        const subscription = event.data.object as Stripe.Subscription;
-        const customerId = subscription.customer as string;
-        const isActive = subscription.status === "active";
-
-        await prisma.user.updateMany({
-          where: { stripeCustomerId: customerId },
-          data: { isPremium: isActive },
-        });
-
-        console.log(`✅ Updated premium status for ${customerId}: ${isActive}`);
-        break;
-      }
+      }      
 
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription;
@@ -69,7 +67,7 @@ export async function POST(req: Request) {
           data: { isPremium: false },
         });
 
-        console.log(`⚠️ Subscription canceled for ${customerId}`);
+        console.log(`⚠️ ${event.type} Subscription canceled for ${customerId}`);
         break;
       }
 
