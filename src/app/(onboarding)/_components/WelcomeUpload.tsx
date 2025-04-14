@@ -62,7 +62,7 @@ const WelcomeUpload = ({ onImageUpload }: Props) => {
   };
 
   return (
-    <div className="w-full max-w-xl rounded-lg bg-dark p-6 flex-wrap flex justify-center">
+    <div className="w-full max-w-xl rounded-lg bg-dark py-12 flex-wrap flex justify-center">
 
       <Link className="mb-10 inline-block" href="/">
         <Image

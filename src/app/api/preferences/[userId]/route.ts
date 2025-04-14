@@ -32,6 +32,21 @@ export async function PUT(req: Request, { params }: { params: { userId: string }
   }
 }
 
+export async function PATCH(req: Request, { params }: { params: { userId: string } }) {
+  try {
+    const body = await req.json();
+    const updatedPreferences = await prisma.preferences.update({
+      where: { userId: params.userId },
+      data: body,
+    });
+
+    return NextResponse.json(updatedPreferences, { status: 200 });
+  } catch (error) {
+    console.error("PATCH Error:", error);
+    return NextResponse.json({ error: "Server error", details: error }, { status: 500 });
+  }
+}
+
 export async function DELETE(req: Request, { params }: { params: { userId: string } }) {
   try {
     await prisma.preferences.delete({ where: { userId: params.userId } });

@@ -31,7 +31,7 @@ export const NAV_DATA = [
 
       {
         title: "Preference",
-        url: "/Profile",
+        url: "/preference",
         icon: Icons.FourCircle,
         items: [],
       },

@@ -37,7 +37,7 @@ export function UserInfo() {
         <figure className="flex items-center gap-3">
           {session?.user?.image && <Image
             src={session.user.image}
-            className="size-12 rounded-full"
+            className="size-12 rounded-full object-cover"
             alt={`Avatar of ${session.user.image}`}
             role="presentation"
             width={200}
@@ -67,7 +67,7 @@ export function UserInfo() {
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
           {session?.user?.image && <Image
             src={session.user.image}
-            className="size-12"
+            className="size-12 rounded-full object-cover"
             alt={`Avatar for ${session.user.name}`}
             role="presentation"
             width={200}

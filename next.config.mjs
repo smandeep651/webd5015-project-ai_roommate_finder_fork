@@ -1,12 +1,17 @@
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["localhost"],
+    domains: ["localhost",'source.unsplash.com'],
     remotePatterns: [
       {
         protocol: "https",
         hostname: "cdn.sanity.io",
         port: ""
+      },
+      {
+        protocol: 'https',
+        hostname: 'source.unsplash.com',
+        pathname: '/512x512/?portrait,face',
       },
       {
         protocol: "https",
