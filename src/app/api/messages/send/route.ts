@@ -1,7 +1,6 @@
 import { auth } from "@/lib/actions";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { ObjectId } from "mongodb";
 import { createNotification } from "@/lib/notifications";
 
 export async function POST(req: Request) {
@@ -17,17 +16,17 @@ export async function POST(req: Request) {
 
     const { senderId, receiverId, message } = body;
 
-    if (!senderId || !receiverId || !message) {
+    if (!senderId || !receiverId || !message?.trim()) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Missing or invalid message fields" },
         { status: 400 }
       );
     }
 
     const savedMessage = await db.message.create({
       data: {
-        senderId: new ObjectId(senderId).toString(),
-        receiverId: new ObjectId(receiverId).toString(),
+        senderId,
+        receiverId,
         message,
         status: "sent",
       },
@@ -41,7 +40,7 @@ export async function POST(req: Request) {
       },
     });
 
-    // 🔔 Create notification for the receiver
+    // 🔔 Optional: create notification for new message
     const sender = await db.user.findUnique({
       where: { id: senderId },
       select: { name: true },

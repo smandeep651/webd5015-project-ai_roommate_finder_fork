@@ -77,11 +77,20 @@ export function Notification() {
     socket.on("new-notification", (notif: NotificationType) => {
       console.log("📩 Notification received:", notif);
 
-      if (notif.receiverId === session?.user?.id) {
+      // Fallback match: if receiverId includes or equals current user ID
+      if (!notif?.receiverId || !session?.user?.id) return;
+
+      const userId = session.user.id;
+
+      if (
+        notif.receiverId === userId ||
+        notif.receiverId.toString().includes(userId)
+      ) {
         setNotifications((prev) => [...prev, notif]);
         setIsDotVisible(true);
       }
     });
+
 
     return () => {
       socket.disconnect();

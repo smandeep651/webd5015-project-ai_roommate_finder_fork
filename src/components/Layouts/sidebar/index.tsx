@@ -9,13 +9,16 @@ import { NAV_DATA } from "./data";
 import { ArrowLeftIcon, ChevronUp } from "./icons";
 import { MenuItem } from "./menu-item";
 import { useSidebarContext } from "./sidebar-context";
-import PricingModal from "../../../app/(home)/_components/PricingModal"
+import PricingModal from "../../../app/(home)/_components/PricingModal";
+import { useSession } from "next-auth/react";
 
 export function Sidebar() {
   const pathname = usePathname();
   const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data: session } = useSession();
+  const [isPremium, setIsPremium] = useState(false);
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -27,11 +30,6 @@ export function Sidebar() {
 
   const toggleExpanded = (title: string) => {
     setExpandedItems((prev) => (prev.includes(title) ? [] : [title]));
-
-    // Uncomment the following line to enable multiple expanded items
-    // setExpandedItems((prev) =>
-    //   prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title],
-    // );
   };
 
   useEffect(() => {
@@ -43,8 +41,6 @@ export function Sidebar() {
             if (!expandedItems.includes(item.title)) {
               toggleExpanded(item.title);
             }
-
-            // Break the loop
             return true;
           }
         });
@@ -52,9 +48,25 @@ export function Sidebar() {
     });
   }, [pathname]);
 
+  useEffect(() => {
+    const checkPremium = async () => {
+      if (session?.user?.id) {
+        try {
+          const res = await fetch(`/api/users/me`);
+          const user = await res.json();
+          console.log("🧠 Premium status:", user.isPremium);
+          setIsPremium(user.isPremium);
+        } catch (err) {
+          console.error("❌ Failed to fetch user premium status", err);
+        }
+      }
+    };
+
+    checkPremium();
+  }, [session?.user?.id]);
+
   return (
     <>
-      {/* Mobile Overlay */}
       {isMobile && isOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-300"
@@ -67,7 +79,7 @@ export function Sidebar() {
         className={cn(
           "max-w-[290px] overflow-hidden border-r border-gray-200 bg-white transition-[width] duration-200 ease-linear dark:border-gray-800 dark:bg-dark",
           isMobile ? "fixed bottom-0 top-0 z-50" : "sticky top-0 h-screen",
-          isOpen ? "w-full" : "w-0",
+          isOpen ? "w-full" : "w-0"
         )}
         aria-label="Main navigation"
         aria-hidden={!isOpen}
@@ -89,13 +101,11 @@ export function Sidebar() {
                 className="absolute left-3/4 right-4.5 top-1/2 -translate-y-1/2 text-right"
               >
                 <span className="sr-only">Close Menu</span>
-
                 <ArrowLeftIcon className="ml-auto size-7" />
               </button>
             )}
           </div>
 
-          {/* Navigation */}
           <div className="custom-scrollbar mt-6 flex-1 overflow-y-auto pr-3 min-[850px]:mt-10">
             {NAV_DATA.map((section) => (
               <div key={section.label} className="mb-6">
@@ -111,22 +121,16 @@ export function Sidebar() {
                           <div>
                             <MenuItem
                               isActive={item.items.some(
-                                ({ url }) => url === pathname,
+                                ({ url }) => url === pathname
                               )}
                               onClick={() => toggleExpanded(item.title)}
                             >
-                              <item.icon
-                                className="size-6 shrink-0"
-                                aria-hidden="true"
-                              />
-
+                              <item.icon className="size-6 shrink-0" aria-hidden="true" />
                               <span>{item.title}</span>
-
                               <ChevronUp
                                 className={cn(
                                   "ml-auto rotate-180 transition-transform duration-200",
-                                  expandedItems.includes(item.title) &&
-                                    "rotate-0",
+                                  expandedItems.includes(item.title) && "rotate-0"
                                 )}
                                 aria-hidden="true"
                               />
@@ -156,8 +160,7 @@ export function Sidebar() {
                             const href =
                               "url" in item
                                 ? item.url + ""
-                                : "/" +
-                                  item.title.toLowerCase().split(" ").join("-");
+                                : "/" + item.title.toLowerCase().split(" ").join("-");
 
                             return (
                               <MenuItem
@@ -166,11 +169,7 @@ export function Sidebar() {
                                 href={href}
                                 isActive={pathname === href}
                               >
-                                <item.icon
-                                  className="size-6 shrink-0"
-                                  aria-hidden="true"
-                                />
-
+                                <item.icon className="size-6 shrink-0" aria-hidden="true" />
                                 <span>{item.title}</span>
                               </MenuItem>
                             );
@@ -182,23 +181,29 @@ export function Sidebar() {
                 </nav>
               </div>
             ))}
-          <div className="bg-gray-3 dark:bg-dark-2 rounded-2xl p-6 text-center shadow-md">
-            <h2 className="dark:text-white text-primary font-bold text-lg mb-2">Upgrade to our premium plan</h2>
-            <p className="text-gray-400 text-sm mb-4">
-              Monthly / get 30 matches requests
-              <br/>Yearly / get unlimited matches requests
-            </p>
-            <button
-          className="bg-primary hover:bg-primaryhover text-white font-medium py-2 px-4 w-full rounded-xl transition"
-          onClick={handleModalOpen}
-        >
-          Purchase Plan
-        </button>
-          </div>
+
+            {!isPremium && (
+              <div className="bg-gray-3 dark:bg-dark-2 rounded-2xl p-6 text-center shadow-md">
+                <h2 className="dark:text-white text-primary font-bold text-lg mb-2">
+                  Upgrade to our premium plan
+                </h2>
+                <p className="text-gray-400 text-sm mb-4">
+                  Monthly / get 30 matches requests
+                  <br />
+                  Yearly / get unlimited matches requests
+                </p>
+                <button
+                  className="bg-primary hover:bg-primaryhover text-white font-medium py-2 px-4 w-full rounded-xl transition"
+                  onClick={handleModalOpen}
+                >
+                  Purchase Plan
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </aside>
-    <PricingModal open={isModalOpen} onClose={handleModalClose} />
+      <PricingModal open={isModalOpen} onClose={handleModalClose} />
     </>
   );
 }

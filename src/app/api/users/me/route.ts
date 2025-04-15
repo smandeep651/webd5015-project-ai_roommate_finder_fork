@@ -90,3 +90,35 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Server error", details: error }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = await db.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        image: true,
+        isPremium: true, // ✅ Make sure this is included
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(user, { status: 200 });
+
+  } catch (err) {
+    console.error("GET /api/users/me error:", err);
+    return NextResponse.json({ error: "Server error", details: err }, { status: 500 });
+  }
+}
+
