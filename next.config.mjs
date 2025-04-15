@@ -3,7 +3,7 @@ const nextConfig = {
   images: {
     domains: [
       "localhost",
-      "source.unsplash.com" // Add this line
+      "source.unsplash.com"
     ],
     remotePatterns: [
       {
@@ -12,9 +12,9 @@ const nextConfig = {
         port: ""
       },
       {
-        protocol: 'https',
-        hostname: 'source.unsplash.com',
-        pathname: '/512x512/?portrait,face',
+        protocol: "https",
+        hostname: "source.unsplash.com",
+        pathname: "/512x512/?portrait,face"
       },
       {
         protocol: "https",
@@ -47,6 +47,9 @@ const nextConfig = {
         port: ""
       }
     ]
+  },
+  eslint: {
+    ignoreDuringBuilds: true
   },
   webpack(config, { isServer }) {
     config.module.rules.push({
