@@ -1,16 +1,20 @@
+// src/app/admin/users/[id]/page.tsx
+
 import { db } from "@/lib/db";
 import { auth } from "@/lib/actions";
 import { redirect } from "next/navigation";
 import EditUserForm from "./EditUserForm";
 import Link from "next/link";
 
+type Props = {
+  params: {
+    id: string;
+  };
+};
 
-export default async function EditUserPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function EditUserPage({ params }: Props) {
   const session = await auth();
+
   if (!session?.user || session.user.role !== "Admin") {
     redirect("/");
   }
@@ -25,7 +29,7 @@ export default async function EditUserPage({
 
   return (
     <main className="p-6 max-w-xl mx-auto">
-        <Link
+      <Link
         href="/admin/users"
         className="inline-block mb-4 text-blue-600 hover:underline text-sm"
       >
