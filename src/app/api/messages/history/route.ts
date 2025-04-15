@@ -8,21 +8,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { user1, user2 } = await req.json();
+  try {
+    const { user1, user2 } = await req.json();
 
-  if (!user1 || !user2) {
-    return NextResponse.json({ error: "Missing user IDs" }, { status: 400 });
+    if (!user1 || !user2) {
+      return NextResponse.json({ error: "Missing user IDs" }, { status: 400 });
+    }
+
+    const messages = await db.message.findMany({
+      where: {
+        OR: [
+          { senderId: user1, receiverId: user2 },
+          { senderId: user2, receiverId: user1 },
+        ],
+      },
+      orderBy: { timestamp: "asc" },
+    });
+
+    return NextResponse.json({ success: true, messages });
+  } catch (error) {
+    console.error("❌ Failed to load messages:", error);
+    return NextResponse.json({ error: "Failed to fetch messages" }, { status: 500 });
   }
-
-  const messages = await db.message.findMany({
-    where: {
-      OR: [
-        { senderId: user1, receiverId: user2 },
-        { senderId: user2, receiverId: user1 },
-      ],
-    },
-    orderBy: { timestamp: "asc" },
-  });
-
-  return NextResponse.json({ success: true, messages });
 }

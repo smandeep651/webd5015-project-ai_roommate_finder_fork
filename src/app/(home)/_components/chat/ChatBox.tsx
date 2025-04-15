@@ -95,12 +95,15 @@ export default function ChatBox({ match, currentUserId, onRemove }: ChatBoxProps
 
     setMessages((prev) => [...prev, tempMsg]);
 
+    // ✅ Use "text" instead of "message" field to avoid Prisma conflict
     socketRef.current?.emit("private-message", {
-      senderId: tempMsg.senderId,
-      receiverId: tempMsg.receiverId,
-      message: tempMsg.message,
+      roomId: match.id,
+      message: {
+        senderId: tempMsg.senderId,
+        receiverId: tempMsg.receiverId,
+        text: tempMsg.message,
+      },
     });
-
 
     setMessage("");
   };

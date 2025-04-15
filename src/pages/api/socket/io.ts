@@ -1,85 +1,3 @@
-// // src/pages/api/socket/io.ts
-// import { Server as NetServer } from "http";
-// import { Server as SocketIOServer } from "socket.io";
-// import type { NextApiRequest, NextApiResponse } from "next";
-// import { createNotification } from "@/lib/notifications";
-
-// export const config = { api: { bodyParser: false } };
-
-// const ioHandler = (_req: NextApiRequest, res: NextApiResponse) => {
-//   if (!res.socket.server.io) {
-//     const httpServer = res.socket.server as any as NetServer;
-//     const io = new SocketIOServer(httpServer, {
-//       path: "/api/socket/io",
-//       cors: {
-//         origin: "*",
-//         methods: ["GET", "POST"],
-//       },
-//     });
-
-//     res.socket.server.io = io;
-
-//     io.on("connection", (socket) => {
-//       socket.on("join", (userId: string) => {
-//         socket.join(userId);
-//       });
-
-//       socket.on("private-message", async ({ senderId, receiverId, message }) => {
-//         try {
-//           const { db } = await import("@/lib/db");
-
-//           const saved = await db.message.create({
-//             data: {
-//               senderId,
-//               receiverId,
-//               message,
-//               timestamp: new Date(),
-//             },
-//           });
-
-//           const sender = await db.user.findUnique({ where: { id: senderId } });
-
-//           if (sender) {
-//             const notification = await createNotification({
-//               type: "message",
-//               message: `New message from ${sender.name}`,
-//               senderId,
-//               receiverId,
-//             });
-
-//             io.to(receiverId).emit("new-notification", {
-//               ...notification,
-//               sender: { name: sender.name, image: sender.image },
-//             });
-//           }
-
-
-
-//           // Send the saved message to both parties
-//           io.to(senderId).emit("new-message", saved);
-//           io.to(receiverId).emit("new-message", saved);
-
-//           // Trigger chat refresh
-//           io.to(senderId).emit("refresh-chats");
-//           io.to(receiverId).emit("refresh-chats");
-
-
-//         } catch (err) {
-//           console.error("❌ Socket error:", err);
-//         }
-//       });
-
-//     });
-//   }
-
-//   res.end();
-// };
-
-// export default ioHandler;
-
-
-// ✅ File: src/pages/api/socket/io.ts
-
 import { Server as NetServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -108,7 +26,9 @@ const ioHandler = (_req: NextApiRequest, res: NextApiResponse) => {
         console.log("📩 match-request received", { senderId, receiverId, message });
         const { db } = await import("@/lib/db");
 
-        const existing = await db.match.findFirst({ where: { userId: senderId, matchId: receiverId } });
+        const existing = await db.match.findFirst({
+          where: { userId: senderId, matchId: receiverId },
+        });
         if (existing) return;
 
         await db.match.create({
@@ -117,11 +37,17 @@ const ioHandler = (_req: NextApiRequest, res: NextApiResponse) => {
 
         if (message?.trim()) {
           await db.message.create({
-            data: { senderId, receiverId, message, timestamp: new Date() },
+            data: {
+              senderId,
+              receiverId,
+              message,
+              status: "sent",
+            },
           });
         }
 
         const sender = await db.user.findUnique({ where: { id: senderId } });
+
         const notification = await createNotification({
           type: "match-request",
           message: `${sender?.name} sent you a match request.`,
@@ -134,9 +60,63 @@ const ioHandler = (_req: NextApiRequest, res: NextApiResponse) => {
           sender: { name: sender?.name, image: sender?.image },
         });
 
-        console.log("📤 Emitting refresh-requests to:", receiverId);
         io.to(receiverId).emit("refresh-requests");
       });
+      socket.on("private-message", async ({ roomId, message }) => {
+        try {
+          console.log("💬 private-message received:", message);
+          const { db } = await import("@/lib/db");
+      
+          if (!message?.senderId || !message?.receiverId || !message?.text) {
+            console.warn("❌ Missing required message fields. Skipping...");
+            return;
+          }
+      
+          // Save message to DB
+          const saved = await db.message.create({
+            data: {
+              senderId: message.senderId,
+              receiverId: message.receiverId,
+              message: message.text,
+              status: "sent",
+            },
+          });
+      
+          // Fetch sender details
+          const sender = await db.user.findUnique({
+            where: { id: message.senderId },
+            select: { name: true, image: true },
+          });
+      
+          // ✅ Create message notification
+          const notification = await createNotification({
+            type: "message",
+            message: `${sender?.name || "Someone"} sent you a message.`,
+            senderId: message.senderId,
+            receiverId: message.receiverId,
+          });
+
+          console.log("🔔 Notification created:", notification);
+
+      
+          // ✅ Emit notification to receiver
+          io.to(message.receiverId).emit("new-notification", {
+            ...notification,
+            sender: { name: sender?.name, image: sender?.image },
+          });
+      
+          // ✅ Emit real-time message
+          io.to(roomId).emit("new-message", {
+            ...saved,
+          });
+      
+          console.log("📤 Emitted new-message + notification to:", message.receiverId);
+        } catch (err) {
+          console.error("❌ Failed to handle private-message:", err);
+        }
+      });
+      
+    
     });
   }
 
