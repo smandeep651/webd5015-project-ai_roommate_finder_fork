@@ -40,6 +40,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "randomuser.me",
         port: ""
+      },
+      {
+        protocol: "https",
+        hostname: "source.unsplash.com",
+        port: ""
       }
     ]
   },

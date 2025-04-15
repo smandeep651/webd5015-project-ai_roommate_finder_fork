@@ -1,6 +1,8 @@
 import { auth } from "@/lib/actions";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { createNotification } from "@/lib/notifications";
+
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -20,6 +22,23 @@ export async function POST(req: Request) {
     where: { id: requestId },
     data: { status: "accepted" },
   });
+
+  try {
+    const receiver = await db.user.findUnique({ where: { id: match.matchId } }); // the approver
+    const sender = await db.user.findUnique({ where: { id: match.userId } }); // the requester
+
+    if (receiver && sender) {
+      await createNotification({
+        type: "request-approved",
+        message: `${receiver.name} accepted your match request.`,
+        senderId: receiver.id,
+        receiverId: sender.id,
+      });
+    }
+  } catch (error) {
+    console.error("❌ Failed to create approval notification:", error);
+  }
+
 
   return NextResponse.json({ success: true });
 }

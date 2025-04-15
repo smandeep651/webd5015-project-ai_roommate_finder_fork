@@ -27,6 +27,8 @@ model User {
   matchesReceived  Match[]      @relation("UserMatchReceiver")
   messagesSent     Message[]    @relation("SentMessages")
   messagesReceived Message[]    @relation("ReceivedMessages")
+  sentNotifications     Notification[] @relation("SentNotifications")
+  receivedNotifications Notification[] @relation("ReceivedNotifications")
 
   // NextAuth relations
   accounts      Account[]
@@ -139,4 +141,17 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, credentialID])
+}
+
+model Notification {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  type       String   // 'match-request', 'request-approved', 'message'
+  message    String
+  senderId   String   @db.ObjectId
+  receiverId String   @db.ObjectId
+  createdAt  DateTime @default(now())
+  read       Boolean  @default(false)
+
+  sender   User @relation(name: "SentNotifications", fields: [senderId], references: [id])
+  receiver User @relation(name: "ReceivedNotifications", fields: [receiverId], references: [id])
 }

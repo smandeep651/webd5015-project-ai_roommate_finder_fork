@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { io, Socket } from "socket.io-client";
-import ConfirmModal from "../ConfirmModal"; // Import your ConfirmModal component
+import ConfirmModal from "../ConfirmModal";
 
 interface Message {
   id: string;
@@ -20,7 +20,7 @@ interface ChatBoxProps {
     image?: string | null;
   };
   currentUserId: string;
-  onRemove: () => void;  // Call this function after removal
+  onRemove: () => void;
 }
 
 export default function ChatBox({ match, currentUserId, onRemove }: ChatBoxProps) {
@@ -28,34 +28,39 @@ export default function ChatBox({ match, currentUserId, onRemove }: ChatBoxProps
   const [messages, setMessages] = useState<Message[]>([]);
   const socketRef = useRef<Socket | null>(null);
   const router = useRouter();
-  const [showConfirm, setShowConfirm] = useState(false); // State for showing the confirmation modal
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
-    // Connect to socket
-    socketRef.current = io({
-      path: "/api/socket/io",
-    });
+    socketRef.current = io({ path: "/api/socket/io" });
 
     socketRef.current.on("connect", () => {
-      console.log("Connected to socket:", socketRef.current?.id);
+      socketRef.current?.emit("join", currentUserId);
     });
 
-    socketRef.current.on("private_message", (msg: Message) => {
-      if (
-        (msg.senderId === match.id && msg.receiverId === currentUserId) ||
-        (msg.senderId === currentUserId && msg.receiverId === match.id)
-      ) {
-        setMessages((prev) => [...prev, msg]);
-      }
+    socketRef.current.on("new-message", (msg: Message) => {
+      setMessages((prev) => {
+        const idx = prev.findIndex(
+          (m) => m.id.startsWith("temp-") && m.senderId === msg.senderId && m.message === msg.message
+        );
+        if (idx !== -1) {
+          const updated = [...prev];
+          updated[idx] = msg;
+          return updated;
+        }
+        if (!prev.some((m) => m.id === msg.id)) {
+          return [...prev, msg];
+        }
+        return prev;
+      });
     });
 
     return () => {
       socketRef.current?.disconnect();
     };
-  }, [match.id, currentUserId]);
+  }, [currentUserId]);
 
   useEffect(() => {
-    // Load message history
     const loadMessages = async () => {
       const res = await fetch("/api/messages/history", {
         method: "POST",
@@ -67,105 +72,87 @@ export default function ChatBox({ match, currentUserId, onRemove }: ChatBoxProps
       });
 
       const data = await res.json();
-      if (data.success) {
-        setMessages(data.messages);
-      }
+      if (data.success) setMessages(data.messages);
     };
 
     loadMessages();
   }, [match.id, currentUserId]);
 
-  const handleSend = async () => {
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSend = () => {
     if (!message.trim()) return;
-  
-    const cleanMsg = {
+
+    const tempMsg: Message = {
+      id: `temp-${Date.now()}`,
       senderId: currentUserId,
       receiverId: match.id,
       message,
-    };
-  
-    // Emit to socket
-    socketRef.current?.emit("private_message", {
-      ...cleanMsg,
       timestamp: new Date().toISOString(),
-      id: `${Date.now()}`, // only for local UI
+    };
+
+    setMessages((prev) => [...prev, tempMsg]);
+
+    socketRef.current?.emit("private-message", {
+      senderId: tempMsg.senderId,
+      receiverId: tempMsg.receiverId,
+      message: tempMsg.message,
     });
-  
-    // Send to server
-    const response = await fetch("/api/messages/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(cleanMsg), // ✅ NOT the one with id
-    });
-  
-    if (!response.ok) {
-      console.error("❌ Failed to save message");
-      return;
-    }
-  
-    const data = await response.json();
-  
-    setMessages((prev) => [...prev, data.message]);
+
+
     setMessage("");
   };
 
   const handleRemove = async () => {
-    setShowConfirm(true); // Show confirmation modal
-  
-    // Make the remove request
-    const response = await fetch("/api/match/delete", {
+    setShowConfirm(true);
+    const res = await fetch("/api/match/delete", {
       method: "POST",
-      body: JSON.stringify({ matchId: match.id }),
       headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ matchId: match.id }),
     });
-  
-    // Log the response for debugging
- 
-    if (response.ok) {
+
+    if (res.ok) {
       onRemove();
       router.push("/matches/matched");
-    } else {
-      const errorData = await response.json();
-      console.error("Failed to remove match:", errorData);
     }
   };
 
   return (
     <div className="w-full h-screen flex flex-col">
-      {/* Confirmation Modal */}
-      <ConfirmModal
-        isOpen={showConfirm}
-        onClose={() => setShowConfirm(false)} // Close modal without doing anything
-        onConfirm={handleRemove} // Call handleRemove on confirmation
-      />
+      <ConfirmModal isOpen={showConfirm} onClose={() => setShowConfirm(false)} onConfirm={handleRemove} />
 
-      {/* Top Bar */}
-      <div className="dark:border-gray-800 dark:bg-gray-dark border-b border-gray-200 bg-white text-white p-4 flex justify-between items-center">
-        <button onClick={() => router.back()} className="text-white font-semibold">
+      <div className="border-b p-4 bg-white dark:bg-gray-dark text-white flex justify-between">
+        <button
+          onClick={() => {
+            sessionStorage.setItem("refresh-matched", "true");
+            router.push("/matches/matched");
+          }}
+          className="font-semibold"
+        >
           ← Back
         </button>
-        <span className="font-semibold text-lg">{match.name || "Matched User"}</span>
-        <button
-          onClick={() => setShowConfirm(true)} // ✅ only opens modal
-          className="text-red-500 font-semibold opacity-70 hover:opacity-100"
-        >
-        Delete Chat
+        <span className="font-semibold">{match.name || "Matched User"}</span>
+        <button onClick={() => setShowConfirm(true)} className="text-red-500">
+          Delete Chat
         </button>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-white dark:bg-dark-2">
-        {messages.map((msg, idx) => (
+      <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-white dark:bg-dark">
+        {messages.map((msg) => (
           <div
-            key={idx}
-            className={`mx-4 p-2 px-4 rounded-full shadow w-fit max-w-xs ${msg.senderId === currentUserId ? "bg-primary text-white ml-auto" : "bg-gray-1  text-black"}`}
+            key={msg.id}
+            className={`p-2 rounded shadow max-w-xs w-fit ${
+              msg.senderId === currentUserId ? "ml-auto bg-gray-1" : "bg-gray-2"
+            } text-black`}
           >
             {msg.message}
           </div>
         ))}
+        <div ref={messageEndRef} />
       </div>
 
-      {/* Input */}
       <div className="p-4 flex gap-2">
         <input
           className="flex-1 border rounded p-2"
@@ -173,10 +160,7 @@ export default function ChatBox({ match, currentUserId, onRemove }: ChatBoxProps
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."
         />
-        <button
-          onClick={handleSend}
-          className="bg-primary text-white px-4 py-2 rounded hover:bg-[#4a1aaa]"
-        >
+        <button onClick={handleSend} className="bg-primary text-white px-4 py-2 rounded">
           Send
         </button>
       </div>

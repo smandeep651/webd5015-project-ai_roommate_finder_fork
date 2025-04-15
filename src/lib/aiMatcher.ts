@@ -90,7 +90,7 @@ export async function findMatches(userId: string) {
     )
       score++;
 
-    const isMatch = score >= 7;
+    const isMatch = score >= 6;
 
     // console.log(`${isMatch ? "yes" : "no"} ${u.name} — score: ${score}/10`);
 

@@ -7,6 +7,7 @@ async function deleteAllData() {
     console.log("🧹 Deleting all user-related data...");
 
     // Delete in order to avoid relation constraints
+    await prisma.notification.deleteMany();
     await prisma.message.deleteMany({});
     await prisma.match.deleteMany({});
     await prisma.preferences.deleteMany({});
