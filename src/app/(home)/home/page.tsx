@@ -1,16 +1,9 @@
 
 import { auth } from "@/lib/actions";
 import { findMatches } from "@/lib/aiMatcher";
-import Image from "next/image";
-import { Button } from "@/components/ui-elements/button";
-import { LikeIcon, MessageOutlineIcon, RemoveIcon } from "@/assets/icons";
-import Link from "next/link";
-import { db } from "@/lib/db";
-import { revalidatePath } from "next/cache";
 import MatchCard from "../_components/MatchCard";
 import { sendMatchRequest } from "@/actions/sendMatchRequest";
 import { redirect } from "next/navigation";
-
 
 export default async function HomePage() {
   const session = await auth();
@@ -34,6 +27,7 @@ export default async function HomePage() {
     throw err;
   }
   return (
+    <>
     <main className="p-6">
       <h1 className="text-3xl font-bold mb-4">Possible Matches</h1>
       <p className="text-gray-700 mb-8">{aiDescription}</p>
@@ -58,5 +52,6 @@ export default async function HomePage() {
         </div>
       )}
     </main>
+    </>
   );
 }

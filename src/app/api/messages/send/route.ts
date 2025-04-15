@@ -2,6 +2,7 @@ import { auth } from "@/lib/actions";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
+import { createNotification } from "@/lib/notifications";
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -38,6 +39,19 @@ export async function POST(req: Request) {
         timestamp: true,
         status: true,
       },
+    });
+
+    // 🔔 Create notification for the receiver
+    const sender = await db.user.findUnique({
+      where: { id: senderId },
+      select: { name: true },
+    });
+
+    await createNotification({
+      type: "message",
+      message: `${sender?.name || "Someone"} sent you a message.`,
+      senderId,
+      receiverId,
     });
 
     return NextResponse.json({ success: true, message: savedMessage });
