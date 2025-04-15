@@ -18,7 +18,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm 
         <div className="mt-4 flex gap-4">
           <button
             onClick={onConfirm}
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full"
+            className="bg-[#D25C5C] text-white px-4 py-2 rounded hover:bg-red-700 w-full"
           >
             Yes, Remove
           </button>

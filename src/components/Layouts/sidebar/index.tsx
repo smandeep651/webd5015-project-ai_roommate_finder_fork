@@ -9,11 +9,21 @@ import { NAV_DATA } from "./data";
 import { ArrowLeftIcon, ChevronUp } from "./icons";
 import { MenuItem } from "./menu-item";
 import { useSidebarContext } from "./sidebar-context";
+import PricingModal from "../../../app/(home)/_components/PricingModal"
 
 export function Sidebar() {
   const pathname = usePathname();
   const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
 
   const toggleExpanded = (title: string) => {
     setExpandedItems((prev) => (prev.includes(title) ? [] : [title]));
@@ -55,7 +65,7 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          "max-w-[290px] overflow-hidden border-r border-gray-200 bg-white transition-[width] duration-200 ease-linear dark:border-gray-800 dark:bg-gray-dark",
+          "max-w-[290px] overflow-hidden border-r border-gray-200 bg-white transition-[width] duration-200 ease-linear dark:border-gray-800 dark:bg-dark",
           isMobile ? "fixed bottom-0 top-0 z-50" : "sticky top-0 h-screen",
           isOpen ? "w-full" : "w-0",
         )}
@@ -172,9 +182,23 @@ export function Sidebar() {
                 </nav>
               </div>
             ))}
+          <div className="bg-gray-3 dark:bg-dark-2 rounded-2xl p-6 text-center shadow-md">
+            <h2 className="dark:text-white text-primary font-bold text-lg mb-2">Upgrade to our premium plan</h2>
+            <p className="text-gray-400 text-sm mb-4">
+              Monthly / get 30 matches requests
+              <br/>Yearly / get unlimited matches requests
+            </p>
+            <button
+          className="bg-primary hover:bg-primaryhover text-white font-medium py-2 px-4 w-full rounded-xl transition"
+          onClick={handleModalOpen}
+        >
+          Purchase Plan
+        </button>
+          </div>
           </div>
         </div>
       </aside>
+    <PricingModal open={isModalOpen} onClose={handleModalClose} />
     </>
   );
 }

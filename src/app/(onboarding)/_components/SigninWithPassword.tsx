@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 export default function SigninWithPassword() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/';
+  const callbackUrl = searchParams!.get('callbackUrl') || '/';
   const [result, formAction, isPending] = useActionState(authenticate, undefined);
   const router = useRouter();
 
@@ -49,7 +49,6 @@ export default function SigninWithPassword() {
   };
 
   return (
-    // <form onSubmit={handleSubmit}>
     <form action={formAction}>
       <InputGroup
         type="email"

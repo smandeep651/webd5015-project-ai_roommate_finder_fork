@@ -28,6 +28,13 @@ export const NAV_DATA = [
           },
         ],
       },
+
+      {
+        title: "Preference",
+        url: "/preference",
+        icon: Icons.FourCircle,
+        items: [],
+      },
     ]
   }
 ]
